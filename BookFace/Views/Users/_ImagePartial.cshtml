@@ -1,0 +1,25 @@
+﻿@model ProfileServiceModel
+@{
+    var ProfileImagePath = Model.ProfileImagePath
+        .Replace(Directory.GetCurrentDirectory(), string.Empty)
+        .Replace(wwwrootPath, string.Empty)
+        .Replace("\\", "/");
+}
+
+<div class="col-md-4 mb-3">
+    <div class="card">
+        <div class="card-body">
+            <div class="d-flex flex-column align-items-center text-center">
+                <img src="@ProfileImagePath" class="rounded-circle" width="150">
+                <div class="mt-3">
+                    <h4>@Model.FirstName @Model.LastName</h4>
+                    @if(Model.Id != User.Id())
+                    {
+                        <button class="btn btn-primary">Send Request</button>
+                        <button class="btn btn-outline-primary" hidden>Message</button>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

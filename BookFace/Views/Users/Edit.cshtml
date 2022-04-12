@@ -1,0 +1,64 @@
+﻿@model ProfileServiceModel
+@{
+    ViewBag.Title = "Edit";
+}
+
+<div class="container">
+    <div class="main-body">
+        <div class="row gutters-sm">
+            <partial name="_ImagePartial" model="@Model" />
+            <div class="col-md-8">
+                <div class="card mb-3">
+                    <form class="card-body" method="post">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">UserName</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                <input asp-for="@Model.Username" name="@nameof(Model.Username)" type="text" class="form-control" value="@Model.Username">
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">First Name</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                <input asp-for="@Model.FirstName" name="@nameof(Model.FirstName)" type="text" class="form-control" value="@Model.FirstName">
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">Last Name</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                <input asp-for="@Model.LastName" name="@nameof(Model.LastName)" type="text" class="form-control" value="@Model.LastName">
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">Email</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                <input asp-for="@Model.Email" name="@nameof(Model.Email)" type="text" class="form-control" value="@Model.Email">
+                            </div>
+                        </div>
+                        <hr>
+                        <input asp-for="@Model.Id" name="@nameof(Model.Id)" type="text" value="@Model.Id" hidden />
+                        @if (Model.Id == User.Id())
+                        {
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <button type="submit" class="btn btn-info " asp-action="@nameof(UsersController.Edit)" asp-controller="Users">Save changes</button>
+                                </div>
+                            </div>
+                        }
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

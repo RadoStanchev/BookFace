@@ -1,0 +1,63 @@
+﻿@page
+@model RegisterModel
+@{
+    ViewBag.Title = "Create a new account";
+}
+
+
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="register-container">
+        <div class="mb-5"></div>
+        <form asp-route-returnUrl="@Model.ReturnUrl" method="post">
+            <h4>@ViewBag.Title</h4>
+            <hr />
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Input.UserName"></label>
+                <input asp-for="Input.UserName" class="form-control" />
+                <span asp-validation-for="Input.UserName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.Email"></label>
+                <input asp-for="Input.Email" class="form-control" />
+                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.Password"></label>
+                <input asp-for="Input.Password" class="form-control" />
+                <span asp-validation-for="Input.Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.ConfirmPassword"></label>
+                <input asp-for="Input.ConfirmPassword" class="form-control" />
+                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.FirstName"></label>
+                <input asp-for="Input.FirstName" class="form-control" />
+                <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.LastName"></label>
+                <input asp-for="Input.LastName" class="form-control" />
+                <span asp-validation-for="Input.LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <p>Select your <label asp-for="Input.ProfileImagePath"></label></p>
+                @foreach (var item in @Model.Input.AllProfileImagePaths)
+                {
+                    <label>
+                        <input asp-for="Input.ProfileImagePath" type="radio" value="@item" />
+                        <img src="@item" class="avatar-icon" width="75" height="75" alts="" />
+                    </label>
+                }
+            </div>
+            <button type="submit" class="btn btn-sign-up">Register</button>
+            <a class="btn btn-link px-0" asp-page="./Login" asp-route-returnUrl="@Model.ReturnUrl">Already have an account?</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

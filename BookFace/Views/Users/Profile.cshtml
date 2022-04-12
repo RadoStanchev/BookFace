@@ -1,0 +1,63 @@
+﻿@model ProfileServiceModel
+@{
+    ViewBag.Title = "Profile";
+}
+
+
+<div class="container">
+    <div class="main-body">
+        <div class="row gutters-sm">
+            <partial name="_ImagePartial" model="@Model"/>
+            <div class="col-md-8">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">UserName</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                @Model.Username
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">First Name</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                @Model.FirstName
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">Last Name</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                @Model.LastName
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">Email</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                @Model.Email
+                            </div>
+                        </div>
+                        <hr>
+                        @if (Model.Id == User.Id())
+                        {
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <a class="btn btn-info " asp-action="@nameof(UsersController.Edit)" asp-controller="Users" asp-route-userId="@Model.Id">Edit</a>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
