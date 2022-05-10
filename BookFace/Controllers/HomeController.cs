@@ -1,4 +1,5 @@
 ﻿using BookFace.Models;
+using BookFace.Services.Home;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -6,6 +7,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using BookFace.Infrastructure.Extensions;
+using BookFace.Models.Home;
 
 namespace BookFace.Controllers
 {
@@ -13,14 +16,22 @@ namespace BookFace.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        private readonly IHomeService homeService;
+
+        public HomeController(ILogger<HomeController> logger, IHomeService homeService)
         {
             _logger = logger;
+            this.homeService = homeService;
         }
 
         public IActionResult Index()
         {
-            return View();
+            var model = new IndexPostSuggestionModel();
+            if (User != null)
+            {
+                model = homeService.GetIndexModel(User.Id());
+            }
+            return View(model);
         }
 
         public IActionResult Privacy()

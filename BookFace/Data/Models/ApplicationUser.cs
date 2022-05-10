@@ -20,7 +20,10 @@ namespace BookFace.Data.Models
         [MaxLength(ProfileImagePathMaxLength)]
         public string ProfileImagePath { get; set; }
 
-        [Required]
+        public string FriendId { get; set; }
+
+        public Friend Friend { get; set; }
+
         public IEnumerable<Friendship> Friendships { get; set; }
 
         public IEnumerable<Post> Posts { get; set; }
