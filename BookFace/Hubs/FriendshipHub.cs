@@ -1,4 +1,4 @@
-﻿using BookFace.Services.Friendships;
+﻿using BookFace.Services.Friendship;
 using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;

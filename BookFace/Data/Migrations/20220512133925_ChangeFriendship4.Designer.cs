@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookFace.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220404055505_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20220512133925_ChangeFriendship4")]
+    partial class ChangeFriendship4
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -82,34 +82,31 @@ namespace BookFace.Data.Migrations
 
             modelBuilder.Entity("BookFace.Data.Models.Friend", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("UserId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
+                    b.HasKey("UserId");
 
                     b.ToTable("Friends");
                 });
 
             modelBuilder.Entity("BookFace.Data.Models.Friendship", b =>
                 {
-                    b.Property<string>("SenderId")
+                    b.Property<string>("FirstUserId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("ReceiverId")
+                    b.Property<string>("SecondUserId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("Status")
+                    b.Property<int>("FirstUserStatus")
                         .HasColumnType("int");
 
-                    b.HasKey("SenderId", "ReceiverId");
+                    b.Property<int>("SecondUserStatus")
+                        .HasColumnType("int");
 
-                    b.HasIndex("ReceiverId");
+                    b.HasKey("FirstUserId", "SecondUserId");
+
+                    b.HasIndex("SecondUserId");
 
                     b.ToTable("Friendships");
                 });
@@ -380,6 +377,9 @@ namespace BookFace.Data.Migrations
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
+                    b.Property<string>("FriendId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasMaxLength(30)
@@ -428,8 +428,8 @@ namespace BookFace.Data.Migrations
             modelBuilder.Entity("BookFace.Data.Models.Friend", b =>
                 {
                     b.HasOne("BookFace.Data.Models.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
+                        .WithOne("Friend")
+                        .HasForeignKey("BookFace.Data.Models.Friend", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -438,21 +438,21 @@ namespace BookFace.Data.Migrations
 
             modelBuilder.Entity("BookFace.Data.Models.Friendship", b =>
                 {
-                    b.HasOne("BookFace.Data.Models.Friend", "Receiver")
+                    b.HasOne("BookFace.Data.Models.ApplicationUser", "FirstUser")
                         .WithMany("Friendships")
-                        .HasForeignKey("ReceiverId")
+                        .HasForeignKey("FirstUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BookFace.Data.Models.Friend", "SecondUser")
+                        .WithMany("Friendships")
+                        .HasForeignKey("SecondUserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("BookFace.Data.Models.ApplicationUser", "Sender")
-                        .WithMany("Friendships")
-                        .HasForeignKey("SenderId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                    b.Navigation("FirstUser");
 
-                    b.Navigation("Receiver");
-
-                    b.Navigation("Sender");
+                    b.Navigation("SecondUser");
                 });
 
             modelBuilder.Entity("BookFace.Data.Models.Message", b =>
@@ -558,6 +558,8 @@ namespace BookFace.Data.Migrations
 
             modelBuilder.Entity("BookFace.Data.Models.ApplicationUser", b =>
                 {
+                    b.Navigation("Friend");
+
                     b.Navigation("Friendships");
 
                     b.Navigation("Posts");

@@ -10,18 +10,21 @@ namespace BookFace.Data.Models
     public class Friendship
     {
         [Required]
-        public string SenderId { get; set; }
+        public string FirstUserId { get; set; }
 
         [Required]
-        public ApplicationUser Sender { get; set; }
+        public ApplicationUser FirstUser { get; set; }
 
         [Required]
-        public string ReceiverId { get; set; }
+        public string SecondUserId { get; set; }
 
         [Required]
-        public Friend Receiver { get; set; }
+        public Friend SecondUser { get; set; }
 
         [Required]
-        public FriendshipStatus Status { get; set; }
+        public FriendshipStatus FirstUserStatus { get; set; }
+
+        [Required]
+        public FriendshipStatus SecondUserStatus { get; set; }
     }
 }

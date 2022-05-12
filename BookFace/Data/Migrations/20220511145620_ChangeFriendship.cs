@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace BookFace.Data.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class ChangeFriendship : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -178,21 +178,29 @@ namespace BookFace.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Friends",
+                name: "Friendships",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    FirstUserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    SecondUserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    FirstUserStatus = table.Column<int>(type: "int", nullable: false),
+                    SecondUserStatus = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Friends", x => x.Id);
+                    table.PrimaryKey("PK_Friendships", x => new { x.FirstUserId, x.SecondUserId });
                     table.ForeignKey(
-                        name: "FK_Friends_AspNetUsers_UserId",
-                        column: x => x.UserId,
+                        name: "FK_Friendships_AspNetUsers_FirstUserId",
+                        column: x => x.FirstUserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Friendships_AspNetUsers_SecondUserId",
+                        column: x => x.SecondUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -240,31 +248,6 @@ namespace BookFace.Data.Migrations
                         name: "FK_Posts_AspNetUsers_CreatorId",
                         column: x => x.CreatorId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Friendships",
-                columns: table => new
-                {
-                    SenderId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ReceiverId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Friendships", x => new { x.SenderId, x.ReceiverId });
-                    table.ForeignKey(
-                        name: "FK_Friendships_AspNetUsers_SenderId",
-                        column: x => x.SenderId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Friendships_Friends_ReceiverId",
-                        column: x => x.ReceiverId,
-                        principalTable: "Friends",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -380,14 +363,9 @@ namespace BookFace.Data.Migrations
                 column: "PostId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Friends_UserId",
-                table: "Friends",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Friendships_ReceiverId",
+                name: "IX_Friendships_SecondUserId",
                 table: "Friendships",
-                column: "ReceiverId");
+                column: "SecondUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Messages_ChatId",
@@ -439,9 +417,6 @@ namespace BookFace.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Posts");
-
-            migrationBuilder.DropTable(
-                name: "Friends");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

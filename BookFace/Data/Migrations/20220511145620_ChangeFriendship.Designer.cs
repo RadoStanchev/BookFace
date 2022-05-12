@@ -4,14 +4,16 @@ using BookFace.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BookFace.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220511145620_ChangeFriendship")]
+    partial class ChangeFriendship
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -76,16 +78,6 @@ namespace BookFace.Data.Migrations
                     b.HasIndex("PostId");
 
                     b.ToTable("Comments");
-                });
-
-            modelBuilder.Entity("BookFace.Data.Models.Friend", b =>
-                {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("UserId");
-
-                    b.ToTable("Friends");
                 });
 
             modelBuilder.Entity("BookFace.Data.Models.Friendship", b =>
@@ -375,9 +367,6 @@ namespace BookFace.Data.Migrations
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
-                    b.Property<string>("FriendId")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasMaxLength(30)
@@ -423,27 +412,16 @@ namespace BookFace.Data.Migrations
                     b.Navigation("Post");
                 });
 
-            modelBuilder.Entity("BookFace.Data.Models.Friend", b =>
-                {
-                    b.HasOne("BookFace.Data.Models.ApplicationUser", "User")
-                        .WithOne("Friend")
-                        .HasForeignKey("BookFace.Data.Models.Friend", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("BookFace.Data.Models.Friendship", b =>
                 {
                     b.HasOne("BookFace.Data.Models.ApplicationUser", "FirstUser")
-                        .WithMany("Friendships")
+                        .WithMany()
                         .HasForeignKey("FirstUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("BookFace.Data.Models.Friend", "SecondUser")
-                        .WithMany("Friendships")
+                    b.HasOne("BookFace.Data.Models.ApplicationUser", "SecondUser")
+                        .WithMany()
                         .HasForeignKey("SecondUserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -544,11 +522,6 @@ namespace BookFace.Data.Migrations
                     b.Navigation("Users");
                 });
 
-            modelBuilder.Entity("BookFace.Data.Models.Friend", b =>
-                {
-                    b.Navigation("Friendships");
-                });
-
             modelBuilder.Entity("BookFace.Data.Models.Post", b =>
                 {
                     b.Navigation("Comments");
@@ -556,10 +529,6 @@ namespace BookFace.Data.Migrations
 
             modelBuilder.Entity("BookFace.Data.Models.ApplicationUser", b =>
                 {
-                    b.Navigation("Friend");
-
-                    b.Navigation("Friendships");
-
                     b.Navigation("Posts");
                 });
 #pragma warning restore 612, 618

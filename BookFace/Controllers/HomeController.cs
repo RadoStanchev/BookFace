@@ -27,9 +27,9 @@ namespace BookFace.Controllers
         public IActionResult Index()
         {
             var model = new IndexPostSuggestionModel();
-            if (User != null)
+            if (User.Identity.IsAuthenticated)
             {
-                model = homeService.GetIndexModel(User.Id());
+                model = homeService.IndexModel(User.Id());
             }
             return View(model);
         }

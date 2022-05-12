@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 using static BookFace.Data.DataConstants.ApplicationUser;
 
 
@@ -24,7 +26,7 @@ namespace BookFace.Data.Models
 
         public Friend Friend { get; set; }
 
-        public IEnumerable<Friendship> Friendships { get; set; }
+        public IEnumerable<Friendship> Friendships { get; set; } = new List<Friendship>();
 
         public IEnumerable<Post> Posts { get; set; }
 

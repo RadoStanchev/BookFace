@@ -10,6 +10,9 @@ namespace BookFace.Data.Enums
         Requested,
         Accepted,
         Denied,
-        Blocked
+        Blocked,
+        BrokeUp,
+        NoneAction,
+        UnBlocked,
     }
 }

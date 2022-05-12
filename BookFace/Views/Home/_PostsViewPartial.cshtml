@@ -1,4 +1,5 @@
-﻿<link rel="stylesheet" href="~/css/HomePage.css">
+﻿@model IndexPostSuggestionModel
+<link rel="stylesheet" href="~/css/HomePage.css">
 <div class="container">
     <div class="profile-page tx-13">
         <div class="row profile-body">
@@ -19,10 +20,22 @@
                                     </div>
                                 </div>
                                 <div class="card-body">
+                                    <input id="postCreatorId" hidden value="@User.Id()" />
                                     <p class="mb-3 tx-14">Image Url</p>
-                                    <input class="mb-3 tx-14 col-md-12" />
+                                    <input id="postImageUrl" class="mb-3 tx-14 col-md-12" />
+                                    <img id="postImage" class="img-fluid" src="https://bootdey.com/img/Content/avatar/avatar6.png" alt="" hidden>
                                     <p class="mb-3 tx-14">Content</p>
-                                    <textarea class="mb-3 tx-14 col-md-12"></textarea>
+                                    <textarea id="postContent" class="mb-3 tx-14 col-md-12"></textarea>
+                                </div>
+                                <div class="card-footer">
+                                    <a href="javascript:;" class="d-flex align-items-center text-muted">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-share icon-md">
+                                            <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+                                            <polyline points="16 6 12 2 8 6"></polyline>
+                                            <line x1="12" y1="2" x2="12" y2="15"></line>
+                                        </svg>
+                                        <p id="sendPost" class="d-none d-md-block ml-2">Send</p>
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -123,109 +136,27 @@
                         <div class="card rounded">
                             <div class="card-body">
                                 <h6 class="card-title">suggestions for you</h6>
-                                <div class="d-flex justify-content-between mb-2 pb-2 border-bottom">
-                                    <div class="d-flex align-items-center hover-pointer">
-                                        <img class="img-xs rounded-circle" src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="">
-                                        <div class="ml-2">
-                                            <p>Mike Popescu</p>
-                                            <p class="tx-11 text-muted">12 Mutual Friends</p>
+                                @foreach (var suggestion in Model.Suggestions)
+                                {
+                                    <div class="d-flex justify-content-between mb-2 pb-2 border-bottom">
+                                        <div class="d-flex align-items-center hover-pointer">
+                                            <img class="img-xs rounded-circle" src="@suggestion.ProfileImagePath" alt="">
+                                            <div class="ml-2">
+                                                <p>@suggestion.FirstName @suggestion.LastName</p>
+                                                <p class="tx-11 text-muted">@suggestion.MutualFriendsCount Mutual Friends</p>
+                                            </div>
+                                            <input hidden value="@suggestion.Id"/>
                                         </div>
+                                        <button class="btn btn-icon">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user-plus" data-toggle="tooltip" title="" data-original-title="Connect">
+                                                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                                <circle cx="8.5" cy="7" r="4"></circle>
+                                                <line x1="20" y1="8" x2="20" y2="14"></line>
+                                                <line x1="23" y1="11" x2="17" y2="11"></line>
+                                            </svg>
+                                        </button>
                                     </div>
-                                    <button class="btn btn-icon">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user-plus" data-toggle="tooltip" title="" data-original-title="Connect">
-                                            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                                            <circle cx="8.5" cy="7" r="4"></circle>
-                                            <line x1="20" y1="8" x2="20" y2="14"></line>
-                                            <line x1="23" y1="11" x2="17" y2="11"></line>
-                                        </svg>
-                                    </button>
-                                </div>
-                                <div class="d-flex justify-content-between mb-2 pb-2 border-bottom">
-                                    <div class="d-flex align-items-center hover-pointer">
-                                        <img class="img-xs rounded-circle" src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="">
-                                        <div class="ml-2">
-                                            <p>Mike Popescu</p>
-                                            <p class="tx-11 text-muted">12 Mutual Friends</p>
-                                        </div>
-                                    </div>
-                                    <button class="btn btn-icon">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user-plus" data-toggle="tooltip" title="" data-original-title="Connect">
-                                            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                                            <circle cx="8.5" cy="7" r="4"></circle>
-                                            <line x1="20" y1="8" x2="20" y2="14"></line>
-                                            <line x1="23" y1="11" x2="17" y2="11"></line>
-                                        </svg>
-                                    </button>
-                                </div>
-                                <div class="d-flex justify-content-between mb-2 pb-2 border-bottom">
-                                    <div class="d-flex align-items-center hover-pointer">
-                                        <img class="img-xs rounded-circle" src="https://bootdey.com/img/Content/avatar/avatar4.png" alt="">
-                                        <div class="ml-2">
-                                            <p>Mike Popescu</p>
-                                            <p class="tx-11 text-muted">12 Mutual Friends</p>
-                                        </div>
-                                    </div>
-                                    <button class="btn btn-icon">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user-plus" data-toggle="tooltip" title="" data-original-title="Connect">
-                                            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                                            <circle cx="8.5" cy="7" r="4"></circle>
-                                            <line x1="20" y1="8" x2="20" y2="14"></line>
-                                            <line x1="23" y1="11" x2="17" y2="11"></line>
-                                        </svg>
-                                    </button>
-                                </div>
-                                <div class="d-flex justify-content-between mb-2 pb-2 border-bottom">
-                                    <div class="d-flex align-items-center hover-pointer">
-                                        <img class="img-xs rounded-circle" src="https://bootdey.com/img/Content/avatar/avatar5.png" alt="">
-                                        <div class="ml-2">
-                                            <p>Mike Popescu</p>
-                                            <p class="tx-11 text-muted">12 Mutual Friends</p>
-                                        </div>
-                                    </div>
-                                    <button class="btn btn-icon">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user-plus" data-toggle="tooltip" title="" data-original-title="Connect">
-                                            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                                            <circle cx="8.5" cy="7" r="4"></circle>
-                                            <line x1="20" y1="8" x2="20" y2="14"></line>
-                                            <line x1="23" y1="11" x2="17" y2="11"></line>
-                                        </svg>
-                                    </button>
-                                </div>
-                                <div class="d-flex justify-content-between mb-2 pb-2 border-bottom">
-                                    <div class="d-flex align-items-center hover-pointer">
-                                        <img class="img-xs rounded-circle" src="https://bootdey.com/img/Content/avatar/avatar6.png" alt="">
-                                        <div class="ml-2">
-                                            <p>Mike Popescu</p>
-                                            <p class="tx-11 text-muted">12 Mutual Friends</p>
-                                        </div>
-                                    </div>
-                                    <button class="btn btn-icon">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user-plus" data-toggle="tooltip" title="" data-original-title="Connect">
-                                            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                                            <circle cx="8.5" cy="7" r="4"></circle>
-                                            <line x1="20" y1="8" x2="20" y2="14"></line>
-                                            <line x1="23" y1="11" x2="17" y2="11"></line>
-                                        </svg>
-                                    </button>
-                                </div>
-                                <div class="d-flex justify-content-between">
-                                    <div class="d-flex align-items-center hover-pointer">
-                                        <img class="img-xs rounded-circle" src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="">
-                                        <div class="ml-2">
-                                            <p>Mike Popescu</p>
-                                            <p class="tx-11 text-muted">12 Mutual Friends</p>
-                                        </div>
-                                    </div>
-                                    <button class="btn btn-icon">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user-plus" data-toggle="tooltip" title="" data-original-title="Connect">
-                                            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                                            <circle cx="8.5" cy="7" r="4"></circle>
-                                            <line x1="20" y1="8" x2="20" y2="14"></line>
-                                            <line x1="23" y1="11" x2="17" y2="11"></line>
-                                        </svg>
-                                    </button>
-                                </div>
-
+                                }
                             </div>
                         </div>
                     </div>
@@ -235,3 +166,35 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.getElementById('postImageUrl').addEventListener('change', e => {
+        e.preventDefault();
+        let el = document.getElementById('postImage');
+        el.src = e.target.value;
+        el.removeAttribute('hidden');
+    });
+
+    let connection = new signalR.HubConnectionBuilder().withUrl('/postHub').build();
+    connection.start()
+        .catch(function (err) {
+            console.log(err.toString());
+        });
+    console.log('Posts connected')
+
+    document.getElementById('sendPost').addEventListener('click', e => {
+        e.preventDefault();
+        let userEl = document.getElementById('postCreatorId');
+        let contentEl = document.getElementById('postContent');
+        let imageUrlEl = document.getElementById('postImageUrl');
+        connection.invoke('CreatePost', userEl.value, contentEl.value, imageUrlEl.value)
+            .catch(function (err) {
+                console.log(err.toString());
+            });
+        userEl.value = "";
+        contentEl.value = "";
+        imageUrlEl.value = "";
+    });
+
+
+</script>
