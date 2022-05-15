@@ -20,5 +20,19 @@
             public const int ContentMinLength = 5;
             public const int ContentMaxLength = 32767;
         }
+
+        public class Post
+        {
+            public const int ContentMinLength = 5;
+            public const int ContentMaxLength = 4000;
+            public const int ImageUrlMaxLength = 2048;
+            public const int ImageUrlMinLength = 20;
+        }
+
+        public class Comment
+        {
+            public const int ContentMinLength = 5;
+            public const int ContentMaxLength = 500;
+        }
     }
 }

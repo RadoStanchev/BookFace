@@ -1,4 +1,5 @@
 ﻿using BookFace.Models.ChatHub;
+using BookFace.Models.Home.User;
 using BookFace.Models.Users;
 using System.Collections.Generic;
 
@@ -25,5 +26,7 @@ namespace BookFace.Services.ApplicationUsers
         ProfileServiceModel Profile(string userId);
 
         bool Edit(string userId, string username, string email, string firstName, string lastName);
+
+        IndexOwnerModel Owner(string creatorId);
     }
 }

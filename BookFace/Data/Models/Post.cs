@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using static BookFace.Data.DataConstants.Post;
 
 namespace BookFace.Data.Models
 {
@@ -9,6 +11,8 @@ namespace BookFace.Data.Models
     {
         public string Id { get; set; } = Guid.NewGuid().ToString();
 
+        [Required]
+        [MaxLength(ContentMaxLength)]
         public string Content { get; set; }
 
         public string Image { get; set; }

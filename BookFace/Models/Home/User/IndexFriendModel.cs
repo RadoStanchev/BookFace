@@ -1,4 +1,4 @@
-﻿namespace BookFace.Models.Home.Suggestion
+﻿namespace BookFace.Models.Home.User
 {
     public class IndexFriendModel
     {

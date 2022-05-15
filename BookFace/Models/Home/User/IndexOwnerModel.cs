@@ -1,6 +1,6 @@
-﻿namespace BookFace.Models.Home.Post
+﻿namespace BookFace.Models.Home.User
 {
-    public class IndexPostOwnerModel
+    public class IndexOwnerModel
     {
         public string FirstName { get; set; }
 

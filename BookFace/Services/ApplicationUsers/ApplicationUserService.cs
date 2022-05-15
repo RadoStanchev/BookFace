@@ -11,6 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using static BookFace.WebConstants;
+using BookFace.Models.Home.User;
 
 namespace BookFace.Services.ApplicationUsers
 {
@@ -71,6 +72,17 @@ namespace BookFace.Services.ApplicationUsers
         public bool IsUsernameUnique(string username)
         {
             return data.ApplicationUsers.All(au => au.UserName != username);
+        }
+
+        public IndexOwnerModel Owner(string creatorId)
+        {
+            var user = data.ApplicationUsers.FirstOrDefault(x => x.Id == creatorId);
+            return new IndexOwnerModel
+            {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                ProfileImagePath = user.ProfileImagePath,
+            };
         }
 
         public string OwnerOfEmail(string email)

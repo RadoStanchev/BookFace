@@ -1,11 +1,15 @@
-﻿using System;
+﻿using BookFace.Models.Home.Comment;
+using BookFace.Models.Home.User;
+using System;
 using System.Collections.Generic;
 
 namespace BookFace.Models.Home.Post
 {
     public class IndexPostModel
     {
-        public IndexPostOwnerModel Owner { get; set; }
+        public string Id { get; set; }
+
+        public IndexOwnerModel Owner { get; set; }
 
         public string Content { get; set; }
 
@@ -13,6 +17,6 @@ namespace BookFace.Models.Home.Post
 
         public DateTime DateDiff { get; set; }
 
-        public IEnumerable<IndexPostCommentModel> Comment { get; set; }
+        public IEnumerable<IndexPostCommentModel> Comments { get; set; }
     }
 }

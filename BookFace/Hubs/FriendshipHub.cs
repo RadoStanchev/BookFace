@@ -15,9 +15,9 @@ namespace BookFace.Hubs
         {
             this.friendshipService = friendshipService;
         }
-        public async Task SendRequest (string senderId, string recieverId)
+        public async Task SendRequest (string firstId, string secondId)
         {
-            await Task.Run(async () => friendshipService.Request(senderId, recieverId));
+            await Task.Run(async () => friendshipService.Request(firstId, secondId));
         }
     }
 }

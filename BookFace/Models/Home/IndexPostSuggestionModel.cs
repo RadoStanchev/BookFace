@@ -1,5 +1,5 @@
 ﻿using BookFace.Models.Home.Post;
-using BookFace.Models.Home.Suggestion;
+using BookFace.Models.Home.User;
 using System.Collections.Generic;
 
 namespace BookFace.Models.Home

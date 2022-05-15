@@ -1,6 +1,6 @@
 ﻿using BookFace.Data;
 using BookFace.Data.Enums;
-using BookFace.Models.Home.Suggestion;
+using BookFace.Models.Home.User;
 using BookFace.Services.Friend;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -16,6 +16,7 @@ namespace BookFace.Services.Friendship
         {
             FriendshipStatus.Blocked,
             FriendshipStatus.Accepted,
+            FriendshipStatus.Requested,
         };
 
         private readonly ApplicationDbContext data;
@@ -267,6 +268,7 @@ namespace BookFace.Services.Friendship
                 .Where(x => myFriends.Contains(x.FirstUserId) || myFriends.Contains(x.SecondUserId))
                 .Select(x => myFriends.Contains(x.FirstUserId) ? x.SecondUserId : x.FirstUserId)
                 .GroupBy(x => x)
+                .Where(x => CanRequest(userId, x.Key))
                 .ToDictionary(x => x.Key, x => x.Count())
                 .OrderByDescending(x => x.Value)
                 .ToList();
@@ -282,9 +284,26 @@ namespace BookFace.Services.Friendship
                          .Where(x => myFriendships.Contains(x) == false)
                          .Where(x => myFriends.Contains(x.FirstUserId) == false && myFriends.Contains(x.SecondUserId) == false)
                          .Select(x => x.FirstUserId)
+                         .Where(x => CanRequest(userId, x))
                          .Distinct()
                          .ToDictionary(x => x, x => 0)
                          .Take(maxCanTake)
+                         .ToList()
+                   );
+            }
+
+            if(suggestionIds.Count() < count)
+            {
+                int maxCanTake = data.ApplicationUsers.Count() - 1 > count ? count - suggestionIds.Count : data.ApplicationUsers.Count();
+                suggestionIds.AddRange(
+                        data.Friends
+                         .Include(x => x.Friendships)
+                         .AsEnumerable()
+                         .Where(x => !x.Friendships.Any())
+                         .Select(x => x.UserId)
+                         .ToDictionary(x => x, x => 0)
+                         .Take(maxCanTake)
+                         .ToList()
                    );
             }
 

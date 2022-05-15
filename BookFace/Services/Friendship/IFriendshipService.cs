@@ -1,4 +1,4 @@
-﻿using BookFace.Models.Home.Suggestion;
+﻿using BookFace.Models.Home.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
