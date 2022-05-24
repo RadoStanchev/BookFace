@@ -1,10 +1,10 @@
-﻿@model IndexPostSuggestionModel
+﻿@model HomePostSuggestionModel
 <link rel="stylesheet" href="~/css/HomePage.css">
 <div class="container">
     <div class="profile-page tx-13">
         <div class="row profile-body">
             <!-- middle wrapper start -->
-            <div class="col-md-12 col-xl-9 middle-wrapper">
+            <div id="posts" class="col-md-12 col-xl-9 middle-wrapper">
                 <div class="row">
                     <div class="col-md-12 grid-margin">
                         <div class="col-md-12">
@@ -39,6 +39,8 @@
                                 </div>
                             </div>
                         </div>
+                        @foreach (var post in Model.Posts)
+                        {
                         <div class="col-md-12">
                             <div class="card rounded">
                                 <div class="card-header">
@@ -46,15 +48,15 @@
                                         <div class="d-flex align-items-center">
                                             <img class="img-xs rounded-circle" src="https://bootdey.com/img/Content/avatar/avatar6.png" alt="">
                                             <div class="ml-2">
-                                                <p>Mike Popescu</p>
-                                                <p class="tx-11 text-muted">1 min ago</p>
+                                                <p>@post.Owner.FirstName @post.Owner.LastName</p>
+                                                <p class="tx-11 text-muted">@post.DateDiff</p>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="card-body">
-                                    <p class="mb-3 tx-14">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus minima delectus nemo unde quae recusandae assumenda.</p>
-                                    <img class="img-fluid" src="https://bootdey.com/img/Content/avatar/avatar6.png" alt="">
+                                    <p class="mb-3 tx-14">@post.Content</p>
+                                    <img class="img-fluid" src="@post.Image" alt="">
                                 </div>
                                 <div class="card-footer">
                                     <div class="d-flex post-actions">
@@ -81,24 +83,31 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="offset-md-1 card rounded">
-                                <div class="card-header">
-                                    <div class="d-flex align-items-center justify-content-between">
-                                        <div class="d-flex align-items-center">
-                                            <img class="img-xs rounded-circle" src="https://bootdey.com/img/Content/avatar/avatar6.png" alt="">
-                                            <div class="ml-2 row">
-                                                <p class="ml-2">Mike Popescu</p>
-                                                <p class="ml-2 tx-11 text-muted">1 min ago</p>
+                        </div>
+                        <div class="comments" style="display: none;">
+                            @foreach (var comment in post.Comments)
+                            {
+                                <div class="offset-md-1 card rounded">
+                                    <div class="card-header">
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <div class="d-flex align-items-center">
+                                                <img class="img-xs rounded-circle" src="https://bootdey.com/img/Content/avatar/avatar6.png" alt="">
+                                                <div class="ml-2 row">
+                                                    <p class="ml-2">@comment.Owner.FirstName @comment.Owner.LastName</p>
+                                                    <p class="ml-2 tx-11 text-muted">@comment.DateDiff</p>
+                                                </div>
                                             </div>
-                                        </div>
 
-                                    </div>
-                                    <div class="d-flex align-items-center justify-content-between">
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+                                        </div>
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <p>@comment.Content</p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                         </div>
+                            }
+                        </div>
+                            
+                         }     
                             <div class="col-md-12">
                                 <div class="card rounded">
                                     <div class="card-header">
@@ -124,7 +133,7 @@
                                                 </svg>
                                                 <p class="d-none d-md-block ml-2">Like</p>
                                             </a>
-                                            <a href="javascript:;" class="d-flex align-items-center text-muted mr-4">
+                                            <a href="javascript:;" class="d-flex align-items-center text-muted mr-4 commentButton">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-message-square icon-md">
                                                     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
                                                 </svg>
@@ -143,11 +152,11 @@
                                 </div>
                             </div>
                         </div>
-                </div>
+                    </div>
             </div>
             <!-- middle wrapper end -->
             <!-- right wrapper start -->
-            <div class="d-none d-xl-block col-xl-3 right-wrapper">
+            <div id="suggestions" class="d-none d-xl-block col-xl-3 right-wrapper">
                 <div class="row">
                     <div class="col-md-12 grid-margin">
                         <div class="card rounded">
@@ -234,6 +243,11 @@
             </div>
         </div>
     </div>
+</script>
+
+<script id="succesfulRequest" type="text/x-handlebars-template">
+    <img src="https://static.thenounproject.com/png/682471-200.png" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user-plus" data-toggle="tooltip" title="" data-original-title="Connect">
+        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
 </script>
 
 <script src="~/js/homePage.js"></script>

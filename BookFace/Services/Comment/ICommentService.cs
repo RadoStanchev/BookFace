@@ -1,5 +1,5 @@
-﻿using BookFace.Models.Home.Comment;
-using BookFace.Models.Home.User;
+﻿using BookFace.Models.Comment;
+using BookFace.Models.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +11,6 @@ namespace BookFace.Services.Comment
     {
         string CreateComment(string creatorId, string postId, string content);
 
-        ICollection<IndexPostCommentModel> IndexPostComments(string postId);
+        ICollection<HomePostCommentModel> IndexPostComments(string postId);
     }
 }

@@ -1,6 +1,6 @@
-﻿using BookFace.Models.Home.Comment;
-using BookFace.Models.Home.Post;
-using BookFace.Models.Home.User;
+﻿using BookFace.Models.Comment;
+using BookFace.Models.Post;
+using BookFace.Models.User;
 using BookFace.Services.Comment;
 using System;
 using System.Collections.Generic;
@@ -13,6 +13,8 @@ namespace BookFace.Services.Post
     {
         string CreatePost(string creatorId, string content, string image);
 
-        IndexPostModel IndexPost(string postId);
+        HomePostModel Post(string postId);
+
+        IEnumerable<HomePostModel> Posts(string userId, int count);
     }
 }

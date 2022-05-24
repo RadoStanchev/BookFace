@@ -1,6 +1,6 @@
 ﻿using BookFace.Data;
-using BookFace.Models.Home.Comment;
-using BookFace.Models.Home.User;
+using BookFace.Models.Comment;
+using BookFace.Models.User;
 using BookFace.Services.ApplicationUsers;
 using System;
 using System.Collections.Generic;
@@ -22,7 +22,7 @@ namespace BookFace.Services.Comment
             this.applicationUserService = applicationUserService;
         }
 
-        public IndexOwnerModel CommentOwner(string userId)
+        public HomeOwnerModel CommentOwner(string userId)
         {
             throw new NotImplementedException();
         }
@@ -43,11 +43,11 @@ namespace BookFace.Services.Comment
             return comment.Id;
         }
 
-        public ICollection<IndexPostCommentModel> IndexPostComments(string postId)
+        public ICollection<HomePostCommentModel> IndexPostComments(string postId)
         {
             return data.Comments
                         .Where(x => x.PostId == postId)
-                        .Select(x => new IndexPostCommentModel
+                        .Select(x => new HomePostCommentModel
                         {
                             Content = x.Content,
                             Owner = applicationUserService.Owner(x.CreatorId)

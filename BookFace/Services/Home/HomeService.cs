@@ -19,11 +19,12 @@ namespace BookFace.Services.Home
             this.postService = postService;
         }
 
-        public IndexPostSuggestionModel IndexModel(string userId)
+        public HomePostSuggestionModel IndexModel(string userId)
         {
-            return new IndexPostSuggestionModel()
+            return new HomePostSuggestionModel()
             {
                 Suggestions = friendshipService.Suggestions(userId, 10),
+                Posts = postService.Posts(userId, 10)
             };
         }
     }

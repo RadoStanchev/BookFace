@@ -1,5 +1,5 @@
 ﻿using BookFace.Data;
-using BookFace.Models.Home.User;
+using BookFace.Models.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,10 +28,10 @@ namespace BookFace.Services.Friend
             return friend.UserId;
         }
 
-        public IndexFriendModel IndexFriend(string userId, int mutualFriendsCount)
+        public FriendModel IndexFriend(string userId, int mutualFriendsCount)
         {
             var user = data.ApplicationUsers.FirstOrDefault(x => x.Id == userId);
-            return new IndexFriendModel
+            return new FriendModel
             {
                 Id = user.Id,
                 FirstName = user.FirstName,

@@ -1,0 +1,45 @@
+﻿body {
+    background-color: #f9fafb;
+}
+/*==================================================
+  Nearby People CSS
+  ==================================================*/
+
+.people-nearby {
+    box-shadow: 0 0 10px 0 rgba(183, 192, 206, 0.2);
+    background-color: #fff;
+    background: border-box;
+    background: #fff;
+}
+
+.profile-photo-lg {
+    margin-left: 30px;
+    margin-right: 30px;
+}
+
+.people-nearby .google-maps {
+    box-shadow: 0 0 10px 0 rgba(183, 192, 206, 0.2);
+    background-color: #fff;
+    border-radius: 4px;
+    border: 1px solid #fff;
+    padding: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+    .people-nearby .google-maps .map {
+        height: 300px;
+        width: 100%;
+        border: none;
+    }
+
+.people-nearby .nearby-user {
+    padding: 20px 0;
+    margin-bottom: 20px;
+}
+
+img.profile-photo-lg {
+    height: 80px;
+    width: 80px;
+    border-radius: 50%;
+}

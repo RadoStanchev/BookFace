@@ -8,6 +8,6 @@ namespace BookFace.Services.Home
 {
     public interface IHomeService
     {
-        IndexPostSuggestionModel IndexModel(string userId);
+        HomePostSuggestionModel IndexModel(string userId);
     }
 }

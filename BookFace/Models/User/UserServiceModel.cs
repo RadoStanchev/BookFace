@@ -1,4 +1,4 @@
-﻿namespace BookFace.Models.ChatHub
+﻿namespace BookFace.Models.User
 {
     public class UserServiceModel
     {

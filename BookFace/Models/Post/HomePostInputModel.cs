@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using static BookFace.Data.DataConstants.Post;
 
-namespace BookFace.Models.Home.Post
+namespace BookFace.Models.Post
 {
-    public class IndexPostInputModel
+    public class HomePostInputModel
     {
         [Required]
         [StringLength(ContentMaxLength, MinimumLength = ContentMinLength)]

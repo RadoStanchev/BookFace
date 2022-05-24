@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using BookFace.Data.Models;
-using BookFace.Models.Users;
+using BookFace.Models.User;
 using BookFace.Services.ApplicationUsers;
 using System.Threading.Tasks;
 

@@ -100,6 +100,7 @@ namespace BookFace
                 endpoints.MapRazorPages();
                 endpoints.MapHub<ChatHub>("/chatHub");
                 endpoints.MapHub<PostHub>("/postHub");
+                endpoints.MapHub<FriendshipHub>("/friendshipHub");
             });
         }
     }

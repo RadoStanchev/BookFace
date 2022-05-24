@@ -1,4 +1,4 @@
-﻿using BookFace.Models.Home.User;
+﻿using BookFace.Models.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +12,7 @@ namespace BookFace.Services.Friend
 
         bool IsExistingFriend(string userId);
 
-        IndexFriendModel IndexFriend(string userId, int mutualFriendsCount);
+        FriendModel IndexFriend(string userId, int mutualFriendsCount);
 
     }
 }

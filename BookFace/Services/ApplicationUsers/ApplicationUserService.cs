@@ -4,14 +4,12 @@ using Microsoft.EntityFrameworkCore;
 using BookFace.Data;
 using BookFace.Data.Models;
 using BookFace.Infrastructure.Extensions;
-using BookFace.Models.ChatHub;
-using BookFace.Models.Users;
+using BookFace.Models.User;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using static BookFace.WebConstants;
-using BookFace.Models.Home.User;
 
 namespace BookFace.Services.ApplicationUsers
 {
@@ -74,10 +72,10 @@ namespace BookFace.Services.ApplicationUsers
             return data.ApplicationUsers.All(au => au.UserName != username);
         }
 
-        public IndexOwnerModel Owner(string creatorId)
+        public HomeOwnerModel Owner(string creatorId)
         {
             var user = data.ApplicationUsers.FirstOrDefault(x => x.Id == creatorId);
-            return new IndexOwnerModel
+            return new HomeOwnerModel
             {
                 FirstName = user.FirstName,
                 LastName = user.LastName,

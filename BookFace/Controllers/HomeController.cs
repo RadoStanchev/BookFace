@@ -26,10 +26,10 @@ namespace BookFace.Controllers
 
         public IActionResult Index()
         {
-            var model = new IndexPostSuggestionModel();
+            var model = new HomePostSuggestionModel();
             if (User.Identity.IsAuthenticated)
             {
-                model = homeService.IndexModel(User.Id());
+               model = homeService.IndexModel(User.Id());
             }
             return View(model);
         }

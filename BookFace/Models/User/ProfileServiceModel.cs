@@ -1,8 +1,10 @@
-﻿namespace BookFace.Models.Home.User
+﻿namespace BookFace.Models.User
 {
-    public class IndexFriendModel
+    public class ProfileServiceModel
     {
         public string Id { get; set; }
+
+        public string Username { get; set; }
 
         public string FirstName { get; set; }
 
@@ -10,6 +12,6 @@
 
         public string ProfileImagePath { get; set; }
 
-        public int MutualFriendsCount { get; set; }
+        public string Email { get; set; }
     }
 }

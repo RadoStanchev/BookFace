@@ -54,7 +54,8 @@ namespace BookFace.Data
                 .Entity<Friend>()
                 .HasOne(x => x.User)
                 .WithOne(x => x.Friend)
-                .HasForeignKey<Friend>(x => x.UserId);
+                .HasForeignKey<Friend>(x => x.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder
                 .Entity<Friendship>()

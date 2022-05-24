@@ -1,6 +1,7 @@
 ﻿using BookFace.Data;
 using BookFace.Data.Enums;
-using BookFace.Models.Home.User;
+using BookFace.Data.Models;
+using BookFace.Models.User;
 using BookFace.Services.Friend;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -64,7 +65,7 @@ namespace BookFace.Services.Friendship
 
         public bool AreFriends(Friendship friendship)
         {
-            return friendship == null || (friendship.FirstUserStatus == FriendshipStatus.Accepted && friendship.SecondUserStatus == FriendshipStatus.Requested) || (friendship.FirstUserStatus == FriendshipStatus.Requested && friendship.SecondUserStatus == FriendshipStatus.Accepted);
+            return !(friendship == null || (friendship.FirstUserStatus != FriendshipStatus.Accepted && friendship.SecondUserStatus != FriendshipStatus.Requested) || (friendship.FirstUserStatus != FriendshipStatus.Requested && friendship.SecondUserStatus != FriendshipStatus.Accepted));
         }
 
         public bool Block(string firstId, string secondId)
@@ -78,7 +79,7 @@ namespace BookFace.Services.Friendship
                 friendship = CreateFriendship(firstId, secondId);
             }
 
-            if (friendship == null)
+            if (CanBlock(friendship, isPrepared) == false)
             {
                 return false;
             }
@@ -141,6 +142,20 @@ namespace BookFace.Services.Friendship
             return !(friendship == null || (isPrepared ? friendship.FirstUserStatus != FriendshipStatus.Requested : friendship.SecondUserStatus != FriendshipStatus.Requested));
         }
 
+        public bool CanBlock(string firstId, string secondId)
+        {
+            var isPrepared = PrepareIds(ref firstId, ref secondId);
+
+            var friendship = data.Friendships.FirstOrDefault(x => x.FirstUserId == firstId && x.SecondUserId == secondId);
+
+            return CanBlock(friendship, isPrepared);
+        }
+
+        public bool CanBlock(Friendship friendship, bool isPrepared)
+        {
+            return !(friendship == null || (isPrepared ? friendship.SecondUserStatus != FriendshipStatus.Blocked : friendship.FirstUserStatus != FriendshipStatus.Blocked));
+        }
+
         public bool CanRequest(string firstId, string secondId)
         {
             var isPrepared = PrepareIds(ref firstId, ref secondId);
@@ -149,7 +164,7 @@ namespace BookFace.Services.Friendship
 
             if (friendship == null)
             {
-                friendship = CreateFriendship(firstId, secondId);
+                return true;
             }
 
             return CanRequest(friendship);
@@ -160,21 +175,21 @@ namespace BookFace.Services.Friendship
             return !(friendship == null || badStatuses.Contains(friendship.FirstUserStatus) || badStatuses.Contains(friendship.SecondUserStatus));
         }
 
-        public Friendship CreateFriendship(string firstId, string secondId)
+        public Friendship CreateFriendship(string firstId, string secondId, FriendshipStatus firstStatus = FriendshipStatus.NoneAction, FriendshipStatus secondStatus = FriendshipStatus.NoneAction)
         {
             if (friendService.IsExistingFriend(firstId) == false || friendService.IsExistingFriend(secondId) == false)
             {
                 return null;
             }
 
-            PrepareIds(ref firstId, ref secondId);
+            var isPrepared = PrepareIds(ref firstId, ref secondId);
 
             var friendship = new Friendship
             {
                 FirstUserId = firstId,
                 SecondUserId = secondId,
-                FirstUserStatus = FriendshipStatus.NoneAction,
-                SecondUserStatus = FriendshipStatus.NoneAction,
+                FirstUserStatus = isPrepared ? secondStatus : firstStatus,
+                SecondUserStatus = isPrepared ? firstStatus : secondStatus,
             };
 
             data.Friendships.Add(friendship);
@@ -206,6 +221,60 @@ namespace BookFace.Services.Friendship
             data.SaveChanges();
 
             return true;
+        }
+
+        public IEnumerable<FriendModel> People(string userId, string searchTerm, int currentPage, int poeplePerPage)
+        {
+            var people = data.Friends
+                .Include(x => x.User)
+                .Select(x => x.User)
+                .ToList();
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                var searchTerms = searchTerm.Split(" ", StringSplitOptions.RemoveEmptyEntries).Select(x => x.ToLower());
+                Predicate<ApplicationUser> predicate = x =>
+                {
+                    var names = (x.FirstName + x.LastName).ToLower();
+                    return searchTerms.Any(st => names.Contains(st));
+                };
+
+                people = people
+                    .AsEnumerable()
+                    .Where(x => predicate(x))
+                    .ToList();
+
+            }
+
+            var myFriends = MyFriendsId(userId);
+
+            return people
+                .Skip((currentPage - 1) * poeplePerPage)
+                .Take(poeplePerPage)
+                .Select(x => new FriendModel
+                {
+                    Id = x.Id,
+                    FirstName = x.FirstName,
+                    LastName = x.LastName,
+                    ProfileImagePath = x.ProfileImagePath,
+                    MutualFriendsCount = MyFriendsId(x.Id).Intersect(myFriends).Count()
+                })
+                .OrderBy(x => x.MutualFriendsCount);
+
+        }
+
+        public IEnumerable<Friendship> MyFriendships(string userId)
+        {
+            return data.Friendships.Where(x => x.FirstUserId == userId || x.SecondUserId == userId).ToList();
+        }
+
+        public IEnumerable<string> MyFriendsId(string userId)
+        {
+            return MyFriendsId(userId, MyFriendships(userId));
+        }
+
+        public IEnumerable<string> MyFriendsId(string userId, IEnumerable<Friendship> myFriendships)
+        {
+            return myFriendships.Select(x => x.FirstUserId != userId ? x.FirstUserId : x.SecondUserId);
         }
 
         public bool PrepareIds(ref string firsrId, ref string secondId)
@@ -253,12 +322,11 @@ namespace BookFace.Services.Friendship
             return true;
         }
 
-        public IEnumerable<IndexFriendModel> Suggestions(string userId, int count)
+        public IEnumerable<FriendModel> Suggestions(string userId, int count)
         {
-            var myFriendships = data.Friends.FirstOrDefault(x => x.UserId == userId).Friendships.ToList();
-            myFriendships.AddRange(data.ApplicationUsers.FirstOrDefault(x => x.Id == userId).Friendships.ToList());
+            var myFriendships = MyFriendships(userId);
 
-            var myFriends = myFriendships.Select(x => x.FirstUserId != userId ? x.FirstUserId : x.SecondUserId);
+            var myFriends = MyFriendsId(userId, myFriendships);
 
             var suggestionIds = data.Friendships
                 .Include(x => x.FirstUser)
@@ -275,26 +343,24 @@ namespace BookFace.Services.Friendship
 
             if (suggestionIds.Count() < count)
             {
-                int maxCanTake = data.ApplicationUsers.Count() -1 > count ? count - suggestionIds.Count : data.ApplicationUsers.Count();
-                    suggestionIds.AddRange(
-                        data.Friendships
-                         .Include(x => x.FirstUser)
-                         .Include(x => x.SecondUser)
-                         .AsEnumerable()
-                         .Where(x => myFriendships.Contains(x) == false)
-                         .Where(x => myFriends.Contains(x.FirstUserId) == false && myFriends.Contains(x.SecondUserId) == false)
-                         .Select(x => x.FirstUserId)
-                         .Where(x => CanRequest(userId, x))
-                         .Distinct()
-                         .ToDictionary(x => x, x => 0)
-                         .Take(maxCanTake)
-                         .ToList()
-                   );
+                suggestionIds.AddRange(
+                    data.Friendships
+                     .Include(x => x.FirstUser)
+                     .Include(x => x.SecondUser)
+                     .AsEnumerable()
+                     .Where(x => myFriendships.Contains(x) == false)
+                     .Where(x => myFriends.Contains(x.FirstUserId) == false && myFriends.Contains(x.SecondUserId) == false)
+                     .Select(x => x.FirstUserId)
+                     .Where(x => CanRequest(userId, x))
+                     .Distinct()
+                     .ToDictionary(x => x, x => 0)
+                     .Take(count - suggestionIds.Count())
+                     .ToList()
+               );
             }
 
-            if(suggestionIds.Count() < count)
+            if (suggestionIds.Count() < count)
             {
-                int maxCanTake = data.ApplicationUsers.Count() - 1 > count ? count - suggestionIds.Count : data.ApplicationUsers.Count();
                 suggestionIds.AddRange(
                         data.Friends
                          .Include(x => x.Friendships)
@@ -302,13 +368,38 @@ namespace BookFace.Services.Friendship
                          .Where(x => !x.Friendships.Any())
                          .Select(x => x.UserId)
                          .ToDictionary(x => x, x => 0)
-                         .Take(maxCanTake)
+                         .Take(count - suggestionIds.Count())
                          .ToList()
                    );
             }
 
 
             return suggestionIds.Select(x => friendService.IndexFriend(x.Key, x.Value));
+        }
+
+        public bool UnBlock(string firstId, string secondId)
+        {
+            var isPrepared = PrepareIds(ref firstId, ref secondId);
+
+            var friendship = data.Friendships.FirstOrDefault(x => x.FirstUserId == firstId && x.SecondUserId == secondId);
+
+            if (CanBlock(friendship, isPrepared))
+            {
+                return false;
+            }
+
+            if (isPrepared)
+            {
+                friendship.SecondUserStatus = FriendshipStatus.UnBlocked;
+            }
+            else
+            {
+                friendship.FirstUserStatus = FriendshipStatus.UnBlocked;
+            }
+
+            data.SaveChanges();
+
+            return true;
         }
     }
 }

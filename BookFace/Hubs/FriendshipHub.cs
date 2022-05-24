@@ -1,4 +1,5 @@
-﻿using BookFace.Services.Friendship;
+﻿using BookFace.Infrastructure.Extensions;
+using BookFace.Services.Friendship;
 using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;
@@ -15,9 +16,9 @@ namespace BookFace.Hubs
         {
             this.friendshipService = friendshipService;
         }
-        public async Task SendRequest (string firstId, string secondId)
+        public async Task SendRequest (string friendId)
         {
-            await Task.Run(async () => friendshipService.Request(firstId, secondId));
+            await Task.Run(async () => friendshipService.Request(Context.User.Id(), friendId));
         }
     }
 }

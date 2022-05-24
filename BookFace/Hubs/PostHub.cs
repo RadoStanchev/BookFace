@@ -1,5 +1,5 @@
 ﻿using BookFace.Infrastructure.Extensions;
-using BookFace.Models.Home.Post;
+using BookFace.Models.Post;
 using BookFace.Services.Post;
 using BookFace.Services.System;
 using Microsoft.AspNetCore.SignalR;
@@ -23,7 +23,7 @@ namespace BookFace.Hubs
         }
         public async Task CreatePost(string content, string image)
         {
-            var inputPost = new IndexPostInputModel
+            var inputPost = new HomePostInputModel
             {
                 Image = image,
                 Content = content,
@@ -40,7 +40,7 @@ namespace BookFace.Hubs
                 var postId = string.Empty;
                 await Task.Run(async () => postId =  postService.CreatePost(Context.User.Id(), content, image));
 
-                await Clients.Caller.SendAsync("ShowPost", postService.IndexPost(postId));
+                await Clients.Caller.SendAsync("ShowPost", postService.Post(postId));
             }
         }
     }
