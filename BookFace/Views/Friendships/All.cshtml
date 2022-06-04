@@ -12,45 +12,51 @@
                         <button class="btn btn-outline-info my-2 my-sm-0">Search</button>
                     </form>
                 </div>
-                @foreach (var friend in Model.CurrentPeople)
-                {
-                    <div class="nearby-user">
-                        <div class="row ">
-                            <div class="col-md-2 col-sm-2">
-                                <img src="@friend.ProfileImagePath" alt="user" class="profile-photo-lg">
-                            </div>
-                            <div class="col-md-3 col-sm-3">
-                                <h5 class="profile-link">@friend.FirstName @friend.LastName</h5>
-                                <p class="text-muted">@friend.MutualFriendsCount Mutual Friends</p>
-                            </div>
-                            <div class="col-md-7 col-sm-7 align-self-center">
-                                <input hidden value="@friend.Id" />
-                                @if (friendshipService.AreFriends(User.Id(), friend.Id))
-                                {
-                                    <button class="btn btn-outline-dark">Brake up</button>
-                                }
-                                else if (friendshipService.CanRequest(User.Id(), friend.Id))
-                                {
-                                    <button class="btn btn-outline-primary">Add Friend</button>
-                                }
-                                else if (friendshipService.CanAcceptOrDeny(User.Id(), friend.Id))
-                                {
-                                    <button class="btn btn-outline-success">Accept</button>
-                                    <button class="btn btn-outline-danger">Deny</button>
-                                }
+                <div id="buttons">
+                    @foreach (var friend in Model.CurrentPeople)
+                    {
+                        <div class="nearby-user">
+                            <div class="row ">
+                                <div class="col-md-2 col-sm-2">
+                                    <img src="@friend.ProfileImagePath" alt="user" class="profile-photo-lg">
+                                </div>
+                                <div class="col-md-3 col-sm-3">
+                                    <h5 class="profile-link">@friend.FirstName @friend.LastName</h5>
+                                    <p class="text-muted">@friend.MutualFriendsCount Mutual Friends</p>
+                                </div>
+                                <div class="col-md-7 col-sm-7 align-self-center">
+                                    <input hidden value="@friend.Id" />
+                                    @if (friendshipService.AreFriends(User.Id(), friend.Id))
+                                    {
+                                        <button class="btn btn-outline-dark" value="BrakeUp">Brake up</button>
+                                    }
+                                    else if (friendshipService.CanRequest(User.Id(), friend.Id))
+                                    {
+                                        <button class="btn btn-outline-primary" value="AddFriend<">Add Friend</button>
+                                    }
+                                    else if (friendshipService.CanAcceptOrDeny(User.Id(), friend.Id))
+                                    {
+                                        <button class="btn btn-outline-success" value="Accept">Accept</button>
+                                        <button class="btn btn-outline-danger" value="Deny">Deny</button>
+                                    }
+                                    else
+                                    {
+                                        <p>Waiting for Answer</p>
+                                    }
 
-                                @if (friendshipService.CanBlock(User.Id(), friend.Id))
-                                {
-                                    <button class="btn btn btn-outline-secondary">Block</button>
-                                }
-                                else
-                                {
-                                    <button class="btn btn btn-outline-secondary">Unblock</button>
-                                }
+                                    @if (friendshipService.CanBlock(User.Id(), friend.Id))
+                                    {
+                                        <button class="btn btn btn-outline-secondary" value="Block">Block</button>
+                                    }
+                                    else
+                                    {
+                                        <button class="btn btn btn-outline-secondary" value="UnBlock">Unblock</button>
+                                    }
+                                </div>
                             </div>
                         </div>
-                    </div>
-                }
+                    }
+                </div>
                 <div class="nearby-user">
                     @{
                         var previousPage = Model.CurrentPage - 1;
@@ -86,3 +92,30 @@
         </div>
     </div>
 </div>
+
+<script id="brakeUpTemplate" type="text/x-handlebars-template">
+    <button class="btn btn-outline-dark" value="BrakeUp">Brake up</button>
+</script>
+
+<script id="addFriendTemplate" type="text/x-handlebars-template">
+    <button class="btn btn-outline-primary" value="AddFriend<">Add Friend</button>
+</script>
+
+<script id="acceptAndDenyTemplate" type="text/x-handlebars-template">
+    <button class="btn btn-outline-success" value="Accept">Accept</button>
+    <button class="btn btn-outline-danger" value="Deny">Deny</button>
+</script>
+
+<script id="blockTemplate" type="text/x-handlebars-template">
+    <button class="btn btn btn-outline-secondary" value="Block">Block</button>
+</script>
+
+<script id="unBlockTemplate" type="text/x-handlebars-template">
+    <button class="btn btn btn-outline-secondary" value="UnBlock">Unblock</button>
+</script>
+
+<script id="waitingTemplate" type="text/x-handlebars-template">
+    <p>Waiting for Answer</p>
+</script>
+
+<script src="~/js/FriendshipPage.js"></script>

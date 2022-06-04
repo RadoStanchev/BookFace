@@ -63,6 +63,12 @@ namespace BookFace.Data
                 .WithMany(x => x.Friendships)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            builder
+               .Entity<Friendship>()
+               .HasOne(x => x.Chat)
+               .WithOne(x => x.Friendship)
+               .OnDelete(DeleteBehavior.Restrict);
+
             base.OnModelCreating(builder);
         }
     }

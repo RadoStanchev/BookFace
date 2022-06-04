@@ -4,15 +4,15 @@ namespace BookFace.Data.Models
 {
     public class Message
     {
-        public int Id { get; set; }
+        public string Id { get; set; } = Guid.NewGuid().ToString();
 
         public string CreatorId { get; set; }
         public ApplicationUser Creator { get; set; }
 
-        public string Text { get; set; }
+        public string Content { get; set; }
         public DateTime CreatedOn { get; set; }
 
-        public int ChatId { get; set; }
+        public string ChatId { get; set; }
         public Chat Chat { get; set; }
     }
 }

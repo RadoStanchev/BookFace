@@ -14,5 +14,7 @@ namespace BookFace.Services.Friend
 
         FriendModel IndexFriend(string userId, int mutualFriendsCount);
 
+        ChatFriendModel ChatFriend(string userId);
+
     }
 }

@@ -124,7 +124,16 @@ namespace BookFace.Services.ApplicationUsers
 
         public UserServiceModel User(string userId)
         {
-            return data.ApplicationUsers.ProjectToSingle<ApplicationUser, UserServiceModel>(au => au.Id == userId, mapper);
+            var user = data.ApplicationUsers.FirstOrDefault(au => au.Id == userId);
+
+            return new UserServiceModel
+            {
+                Id = user.Id,
+                Username = user.UserName,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                ProfileImagePath = user.ProfileImagePath,
+            };
         }
 
         public string UserName(string userId)

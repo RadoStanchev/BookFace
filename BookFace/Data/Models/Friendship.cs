@@ -26,5 +26,9 @@ namespace BookFace.Data.Models
 
         [Required]
         public FriendshipStatus SecondUserStatus { get; set; }
+
+        public string ChatId { get; set; }
+
+        public Chat Chat { get; set; }
     }
 }

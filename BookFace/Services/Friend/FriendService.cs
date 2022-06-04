@@ -15,6 +15,19 @@ namespace BookFace.Services.Friend
         {
             this.data = data;
         }
+
+        public ChatFriendModel ChatFriend(string userId)
+        {
+            var user = data.ApplicationUsers.FirstOrDefault(x => x.Id == userId);
+            return new ChatFriendModel
+            {
+                Id = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                ProfileImagePath = user.ProfileImagePath,
+            };
+        }
+
         public string CreateFriend(string userId)
         {
             var friend = new Friend()

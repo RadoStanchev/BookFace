@@ -2,6 +2,7 @@
 using BookFace.Data.Enums;
 using BookFace.Data.Models;
 using BookFace.Models.User;
+using BookFace.Services.Chat;
 using BookFace.Services.Friend;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -23,10 +24,14 @@ namespace BookFace.Services.Friendship
         private readonly ApplicationDbContext data;
 
         private readonly IFriendService friendService;
-        public FriendshipService(ApplicationDbContext data, IFriendService friendService)
+
+        private readonly IChatService chatService;
+
+        public FriendshipService(ApplicationDbContext data, IFriendService friendService, IChatService chatService)
         {
             this.data = data;
             this.friendService = friendService;
+            this.chatService = chatService;
         }
 
         public bool Accept(string firstId, string secondId)
@@ -65,7 +70,7 @@ namespace BookFace.Services.Friendship
 
         public bool AreFriends(Friendship friendship)
         {
-            return !(friendship == null || (friendship.FirstUserStatus != FriendshipStatus.Accepted && friendship.SecondUserStatus != FriendshipStatus.Requested) || (friendship.FirstUserStatus != FriendshipStatus.Requested && friendship.SecondUserStatus != FriendshipStatus.Accepted));
+            return friendship != null && ((friendship.FirstUserStatus == FriendshipStatus.Accepted && friendship.SecondUserStatus == FriendshipStatus.Requested) || (friendship.FirstUserStatus == FriendshipStatus.Requested && friendship.SecondUserStatus == FriendshipStatus.Accepted));
         }
 
         public bool Block(string firstId, string secondId)
@@ -139,7 +144,7 @@ namespace BookFace.Services.Friendship
 
         public bool CanAcceptOrDeny(Friendship friendship, bool isPrepared)
         {
-            return !(friendship == null || (isPrepared ? friendship.FirstUserStatus != FriendshipStatus.Requested : friendship.SecondUserStatus != FriendshipStatus.Requested));
+            return friendship != null && (isPrepared ? friendship.FirstUserStatus == FriendshipStatus.Requested : friendship.SecondUserStatus == FriendshipStatus.Requested);
         }
 
         public bool CanBlock(string firstId, string secondId)
@@ -153,7 +158,7 @@ namespace BookFace.Services.Friendship
 
         public bool CanBlock(Friendship friendship, bool isPrepared)
         {
-            return !(friendship == null || (isPrepared ? friendship.SecondUserStatus != FriendshipStatus.Blocked : friendship.FirstUserStatus != FriendshipStatus.Blocked));
+            return friendship == null || (isPrepared ? friendship.SecondUserStatus != FriendshipStatus.Blocked : friendship.FirstUserStatus != FriendshipStatus.Blocked);
         }
 
         public bool CanRequest(string firstId, string secondId)
@@ -190,6 +195,7 @@ namespace BookFace.Services.Friendship
                 SecondUserId = secondId,
                 FirstUserStatus = isPrepared ? secondStatus : firstStatus,
                 SecondUserStatus = isPrepared ? firstStatus : secondStatus,
+                ChatId = chatService.CreateChat(),
             };
 
             data.Friendships.Add(friendship);
@@ -228,6 +234,7 @@ namespace BookFace.Services.Friendship
             var people = data.Friends
                 .Include(x => x.User)
                 .Select(x => x.User)
+                .Where(x => x.Id != userId)
                 .ToList();
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
@@ -383,7 +390,7 @@ namespace BookFace.Services.Friendship
 
             var friendship = data.Friendships.FirstOrDefault(x => x.FirstUserId == firstId && x.SecondUserId == secondId);
 
-            if (CanBlock(friendship, isPrepared))
+            if (CanBlock(friendship, isPrepared) == true)
             {
                 return false;
             }
@@ -400,6 +407,11 @@ namespace BookFace.Services.Friendship
             data.SaveChanges();
 
             return true;
+        }
+
+        public Friendship Friendship(string firstId, string secondId)
+        {
+            return data.Friendships.FirstOrDefault(x => (x.FirstUserId == firstId && x.SecondUserId == secondId) || (x.FirstUserId == secondId && x.SecondUserId == firstId));
         }
     }
 }

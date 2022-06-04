@@ -57,7 +57,7 @@ friendshipConnection.start()
 document.getElementById('suggestions').addEventListener('click', e => {
     e.preventDefault();
     let { target } = e;
-    if (target.nodeName != "BUTTON" && target.nodeName != "svg") {
+    if (target.nodeName.toLowerCase() != "button" && target.nodeName.toLowerCase() != "svg") {
         return;
     }
     let parent = target.parentElement;;

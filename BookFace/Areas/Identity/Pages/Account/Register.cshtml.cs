@@ -117,7 +117,7 @@ namespace BookFace.Areas.Identity.Pages.Account
                     {
                         await signInManager.SignInAsync(user, isPersistent: false);
                         friendService.CreateFriend(user.Id);
-                        friendshipService.CreateFriendship(user.Id, user.Id, FriendshipStatus.Requested, FriendshipStatus.Accepted);
+                        friendshipService.CreateFriendship(user.Id, user.Id, FriendshipStatus.Requested, FriendshipStatus.Accepted);   
                         return LocalRedirect(returnUrl);
                     }
 

@@ -20,5 +20,30 @@ namespace BookFace.Hubs
         {
             await Task.Run(async () => friendshipService.Request(Context.User.Id(), friendId));
         }
+
+        public async Task SendAccept(string friendId)
+        {
+            await Task.Run(async () => friendshipService.Accept(Context.User.Id(), friendId));
+        }
+
+        public async Task SendBlock(string friendId)
+        {
+            await Task.Run(async () => friendshipService.Block(Context.User.Id(), friendId));
+        }
+
+        public async Task SendDeny(string friendId)
+        {
+            await Task.Run(async () => friendshipService.Deny(Context.User.Id(), friendId));
+        }
+
+        public async Task SendUnBlock(string friendId)
+        {
+            await Task.Run(async () => friendshipService.UnBlock(Context.User.Id(), friendId));
+        }
+
+        public async Task SendBrakeUp(string friendId)
+        {
+            await Task.Run(async () => friendshipService.BrakeUp(Context.User.Id(), friendId));
+        }
     }
 }

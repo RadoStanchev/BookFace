@@ -3,10 +3,12 @@ using BookFace.Data.Models;
 using BookFace.Hubs;
 using BookFace.Infrastructure.Extensions;
 using BookFace.Services.ApplicationUsers;
+using BookFace.Services.Chat;
 using BookFace.Services.Comment;
 using BookFace.Services.Friend;
 using BookFace.Services.Friendship;
 using BookFace.Services.Home;
+using BookFace.Services.Message;
 using BookFace.Services.Post;
 using BookFace.Services.System;
 using Microsoft.AspNetCore.Builder;
@@ -59,6 +61,8 @@ namespace BookFace
             services.AddSignalR();
 
             services.AddTransient<IApplicationUserService, ApplicationUserService>();
+            services.AddTransient<IChatService, ChatService>();
+            services.AddTransient<IMessageService, MessageService>();
             services.AddTransient<ICommentService, CommentService>();
             services.AddTransient<IValidator, ClassValidator>();
             services.AddTransient<IPostService, PostService>();
