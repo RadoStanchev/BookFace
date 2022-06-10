@@ -28,8 +28,8 @@ namespace BookFace.Data.Models
 
         public IEnumerable<Friendship> Friendships { get; set; } = new List<Friendship>();
 
-        public IEnumerable<Post> Posts { get; set; }
+        public IEnumerable<Post> Posts { get; set; } = new List<Post>();
 
-        public IEnumerable<Post> Likes { get; set; }
+        public ICollection<Post> Likes { get; set; } = new List<Post>();
     }
 }

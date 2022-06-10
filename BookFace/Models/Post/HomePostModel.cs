@@ -15,8 +15,10 @@ namespace BookFace.Models.Post
 
         public string Image { get; set; }
 
-        public TimeSpan DateDiff { get; set; }
+        public string DateDiff { get; set; }
 
         public IEnumerable<HomePostCommentModel> Comments { get; set; }
+
+        public bool IsLiked { get; set; }
     }
 }

@@ -1,15 +1,15 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using static BookFace.Data.DataConstants.Post;
+using static BookFace.Data.DataConstants.Comment;
 
-namespace BookFace.Models.Post
+namespace BookFace.Models.Comment
 {
-    public class HomePostInputModel
+    public class CommentInputModel
     {
         [Required]
         [StringLength(ContentMaxLength, MinimumLength = ContentMinLength)]
         public string Content { get; set; }
 
-        [MaxLength(ImageUrlMaxLength)]
-        public string Image { get; set; }
+        [Required]
+        public string PostId { get; set; }
     }
 }

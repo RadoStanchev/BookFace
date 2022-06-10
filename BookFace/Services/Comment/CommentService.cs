@@ -1,11 +1,9 @@
 ﻿using BookFace.Data;
 using BookFace.Models.Comment;
-using BookFace.Models.User;
 using BookFace.Services.ApplicationUsers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace BookFace.Services.Comment
 {
@@ -22,9 +20,16 @@ namespace BookFace.Services.Comment
             this.applicationUserService = applicationUserService;
         }
 
-        public HomeOwnerModel CommentOwner(string userId)
+        public HomePostCommentModel Comment(string commentId)
         {
-            throw new NotImplementedException();
+            var comment = data.Comments.FirstOrDefault(x => x.Id == commentId);
+
+            return new HomePostCommentModel
+            {
+                Content = comment.Content,
+                Owner = applicationUserService.Owner(comment.CreatorId),
+                DateDiff = comment.CreatedOn.ToString("dddd, dd MMMM yyyy HH:mm"),
+            };
         }
 
         public string CreateComment(string creatorId, string postId, string content)
@@ -46,11 +51,13 @@ namespace BookFace.Services.Comment
         public ICollection<HomePostCommentModel> IndexPostComments(string postId)
         {
             return data.Comments
+                        .AsQueryable()
                         .Where(x => x.PostId == postId)
                         .Select(x => new HomePostCommentModel
                         {
                             Content = x.Content,
-                            Owner = applicationUserService.Owner(x.CreatorId)
+                            Owner = applicationUserService.Owner(x.CreatorId),
+                            DateDiff = x.CreatedOn.ToString("dddd, dd MMMM yyyy HH:mm"),
                         })
                         .ToList();
         }

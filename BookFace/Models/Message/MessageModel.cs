@@ -12,7 +12,7 @@ namespace BookFace.Models.Message
 
         public string Content { get; set; }
 
-        public TimeSpan DateDiff { get; set; }
+        public string DateDiff { get; set; }
 
         public string CreatorId { get; set; }
     }

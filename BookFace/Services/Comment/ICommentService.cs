@@ -12,5 +12,7 @@ namespace BookFace.Services.Comment
         string CreateComment(string creatorId, string postId, string content);
 
         ICollection<HomePostCommentModel> IndexPostComments(string postId);
+
+        HomePostCommentModel Comment(string commentId);
     }
 }

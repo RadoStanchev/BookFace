@@ -24,11 +24,14 @@ document.getElementById('sendPost').addEventListener('click', e => {
         });
     contentEl.value = "";
     imageUrlEl.value = "";
+    let el = document.getElementById('postImage');
+    el.src = '';
+    el.hidden = true;
 });
 
 postConnection.on('ShowPostErrors', (errors) => {
     let section = document.getElementById("postErrors");
-    let source = document.getElementById('postErrorsTemplate').innerHTML;
+    let source = document.getElementById('errorsTemplate').innerHTML;
     let template = Handlebars.compile(source);
     let resultHTML = template({ errors });
     section.innerHTML = resultHTML;
@@ -38,11 +41,18 @@ postConnection.on('ShowPostErrors', (errors) => {
     }, 7500)
 });
 
-postConnection.on('ShowPost', (post) => {
+postConnection.on('ShowPost', (post, user) => {
     let section = document.getElementById('posts');
-    let source = document.getElementById('postTemplate').innerHTML;
+    let source = document.getElementById('commentTemplate').innerHTML;
+    Handlebars.registerPartial('comment', source);
+    source = document.getElementById('postTemplate').innerHTML;
     let template = Handlebars.compile(source);
-    let resultHTML = template({ post });
+
+    let obj = {
+        post,
+        user,
+    }
+    let resultHTML = template(obj);
     section.innerHTML = resultHTML + section.innerHTML;
 });
 
@@ -86,13 +96,105 @@ document.getElementById('suggestions').addEventListener('click', e => {
 document.getElementById('posts').addEventListener('click', e => {
     let { target } = e;
     let parent = target.parentElement;
-    if (parent.classList.contains('commentButton') == false) {
+    if (parent.classList.contains('commentButton') == false && target.classList.contains('commentButton') == false) {
         return;
     }
 
-    if (parent.style.display === "none") {
-        parent.style.display = "block";
-    } else {
-        parent.style.display = "none";
+    while(parent.className.includes('col-md-12') == false){
+        parent = parent.parentElement;
     }
-})
+
+    let section = parent.getElementsByClassName('comments')[0];
+
+    if (section.style.display === "none") {
+        section.style.display = "block";
+    } else {
+        section.style.display = "none";
+    }
+});
+
+postConnection.on('ShowCommentErrors', (errors, postId) => {
+    let section = document
+        .querySelector(`input.postId[value="${postId}"]`)
+        .parentElement
+        .parentElement
+        .getElementsByClassName('commentErrors')[0];;
+    let source = document.getElementById('errorsTemplate').innerHTML;
+    let template = Handlebars.compile(source);
+    let resultHTML = template({ errors });
+    section.innerHTML = resultHTML;
+    section.hidden = false;
+    setTimeout(() => {
+        section.hidden = true;
+    }, 7500)
+});
+
+postConnection.on('ShowComment', (comment, postId) => {
+    let section = document
+        .querySelector(`input.postId[value="${postId}"]`)
+        .parentElement
+        .parentElement
+        .getElementsByClassName('usersComments')[0];
+    let source = document.getElementById('commentTemplate').innerHTML;
+    let template = Handlebars.compile(source);
+    let resultHTML = template(comment);
+    section.innerHTML = resultHTML + section.innerHTML;
+});
+
+document.getElementById('posts').addEventListener('click', e => {
+    e.preventDefault();
+    let { target } = e;
+    let parent = target.parentElement;
+    if(parent.classList.contains('sendComment') == false){
+        return;
+    }
+
+    let contentEl = parent.parentElement.getElementsByTagName('input')[0];
+
+    while(parent.className.includes('col-md-12') == false){
+        parent = parent.parentElement;
+    }
+
+    let postId = parent.getElementsByClassName('postId')[0].value;
+
+    postConnection.invoke('CreateComment', contentEl.value, postId)
+        .catch(function (err) {
+            console.log(err.toString());
+        });
+    contentEl.value = '';
+});
+
+//Like and DisLike
+document.getElementById('posts').addEventListener('click', e => {
+    e.preventDefault();
+    let { target } = e;
+    let parent = target.parentElement;
+    if(parent.classList.contains('likeButton') == false && target.classList.contains('likeButton') == false){
+        return;
+    }
+
+    while(parent.className.includes('col-md-12') == false){
+        parent = parent.parentElement;
+    }
+
+    let postId = parent.getElementsByClassName('postId')[0].value;
+    let pEl = target.parentElement.getElementsByTagName('p')[0];
+    let svgEl = target.parentElement.getElementsByTagName('svg')[0];
+    let imgEl = target.parentElement.getElementsByTagName('img')[0];
+
+    if (pEl.textContent == 'Like') {
+        postConnection.invoke('LikePost', postId);
+        pEl.textContent = 'Dislike';
+        svgEl.style.display = 'none';
+        imgEl.hidden = false;
+    } else {
+        postConnection.invoke('DisLikePost', postId);
+        pEl.textContent = 'Like';
+        svgEl.style.display = 'block';
+        imgEl.hidden = true;
+    }
+});
+
+postConnection.on('ChangeLikesCount', (postId, count) => {
+
+});

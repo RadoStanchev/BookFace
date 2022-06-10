@@ -5,6 +5,7 @@ using BookFace.Models.User;
 using BookFace.Services.ApplicationUsers;
 using BookFace.Services.Comment;
 using BookFace.Services.Friendship;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,6 +32,20 @@ namespace BookFace.Services.Post
             this.commentService = commentService;
             this.friendshipService = friendshipService;
         }
+
+        public bool CanLike(string postId, string userId)
+        {
+            var post = data.Posts.FirstOrDefault(x => x.Id == postId);
+            var user = data.ApplicationUsers.Include(x => x.Likes).FirstOrDefault(x => x.Id == userId);
+
+            return CanLike(post, user);
+        }
+
+        public bool CanLike(Post post, ApplicationUser user)
+        {
+            return post.Likes.Contains(user) == false;
+        }
+
         public string CreatePost(string creatorId, string content, string image)
         {
             var post = new Post()
@@ -47,9 +62,47 @@ namespace BookFace.Services.Post
             return post.Id;
         }
 
-        public HomePostModel Post(string postId)
+        public bool DisLikePost(string postId, string userId)
         {
             var post = data.Posts.FirstOrDefault(x => x.Id == postId);
+            var user = data.ApplicationUsers.Include(x => x.Likes).FirstOrDefault(x => x.Id == userId);
+
+            if (CanLike(post, user))
+            {
+                return false;
+            }
+
+            user.Likes.Remove(post);
+            data.SaveChanges();
+
+            return true;
+        }
+
+        public bool LikePost(string postId, string userId)
+        {
+            var post = data.Posts.FirstOrDefault(x => x.Id == postId);
+            var user = data.ApplicationUsers.Include(x => x.Likes).FirstOrDefault(x => x.Id == userId);
+
+            if (CanLike(post, user) == false)
+            {
+                return false;
+            }
+
+            user.Likes.Add(post);
+            data.SaveChanges();
+
+            return true;
+        }
+
+        public int LikesCount(string postId)
+        {
+            return data.Posts.FirstOrDefault(x => x.Id == postId).Likes.Count();
+        }
+
+        public HomePostModel Post(string postId, string userId)
+        {
+            var post = data.Posts.Include(x => x.Likes).FirstOrDefault(x => x.Id == postId);
+            var user = data.ApplicationUsers.FirstOrDefault(x => x.Id == userId);
 
             return new HomePostModel
             {
@@ -58,15 +111,18 @@ namespace BookFace.Services.Post
                 Image = post.Image,
                 Comments = commentService.IndexPostComments(postId),
                 Owner = applicationUserService.Owner(post.CreatorId),
-                DateDiff = DateTime.Now - post.CreatedOn,
+                DateDiff = post.CreatedOn.ToString("dddd, dd MMMM yyyy HH:mm"),
+                IsLiked = post.Likes.Contains(user),
             };
         }
 
         public IEnumerable<HomePostModel> Posts(string userId, int count)
         {
             var myFriends = friendshipService.MyFriendsId(userId);
-            return data.Posts.
-                    Where(x => myFriends.Contains(x.CreatorId))
+            var user = data.ApplicationUsers.FirstOrDefault(x => x.Id == userId);
+            return data.Posts
+                    .Include(x => x.Likes)
+                    .Where(x => myFriends.Contains(x.CreatorId))
                     .OrderByDescending(x => x.CreatedOn)
                     .Select(x => new HomePostModel
                     {
@@ -75,7 +131,8 @@ namespace BookFace.Services.Post
                         Image = x.Image,
                         Comments = commentService.IndexPostComments(x.Id),
                         Owner = applicationUserService.Owner(x.CreatorId),
-                        DateDiff = DateTime.Now - x.CreatedOn,
+                        DateDiff = x.CreatedOn.ToString("dddd, dd MMMM yyyy HH:mm"),
+                        IsLiked = x.Likes.Contains(user),
                     })
                     .Take(count);
         }

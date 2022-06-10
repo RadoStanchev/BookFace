@@ -9,6 +9,6 @@ namespace BookFace.Models.Comment
 
         public string Content { get; set; }
 
-        public DateTime DateDiff { get; set; }
+        public string DateDiff { get; set; }
     }
 }

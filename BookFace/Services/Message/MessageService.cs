@@ -45,7 +45,7 @@ namespace BookFace.Services.Message
                 Content = message.Content,
                 Owner = applicationUserService.Owner(message.CreatorId),
                 CreatorId = message.CreatorId,
-                DateDiff = DateTime.Now - message.CreatedOn,
+                DateDiff = message.CreatedOn.ToString("dddd, dd MMMM yyyy HH:mm"),
             };
         }
 
@@ -58,7 +58,7 @@ namespace BookFace.Services.Message
                     Content = x.Content,
                     Owner = applicationUserService.Owner(x.CreatorId),
                     CreatorId = x.CreatorId,
-                    DateDiff = DateTime.Now - x.CreatedOn,
+                    DateDiff = x.CreatedOn.ToString("dddd, dd MMMM yyyy HH:mm"),
                 })
                 .ToList();
         }

@@ -78,7 +78,7 @@ namespace BookFace
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
+            if (env.IsDevelopment() || true)
             {
                 app.UseDeveloperExceptionPage();
                 app.UseMigrationsEndPoint();

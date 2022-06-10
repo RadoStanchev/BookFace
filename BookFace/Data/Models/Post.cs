@@ -15,6 +15,7 @@ namespace BookFace.Data.Models
         [MaxLength(ContentMaxLength)]
         public string Content { get; set; }
 
+        [MaxLength(ImageUrlMaxLength)]
         public string Image { get; set; }
 
         public DateTime CreatedOn { get; set; }
@@ -23,8 +24,8 @@ namespace BookFace.Data.Models
 
         public ApplicationUser Creator { get; set; }
 
-        public IEnumerable<Comment> Comments { get; set; }
+        public IEnumerable<Comment> Comments { get; set; } = new List<Comment>();
 
-        public IEnumerable<ApplicationUser> Likes { get; set; }
+        public IEnumerable<ApplicationUser> Likes { get; set; } = new List<ApplicationUser>();
     }
 }
