@@ -52,7 +52,9 @@ namespace BookFace.Services.Message
         public IEnumerable<MessageModel> Messages(string chatId)
         {
             return data.Messages
+                .AsEnumerable()
                 .Where(x => x.ChatId == chatId)
+                .OrderBy(x => x.CreatedOn)
                 .Select(x => new MessageModel
                 {
                     Content = x.Content,

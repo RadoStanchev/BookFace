@@ -52,5 +52,7 @@ namespace BookFace.Services.Friendship
 
         Friendship Friendship(string firstId, string secondId);
 
+        int TotalPeople();
+
     }
 }

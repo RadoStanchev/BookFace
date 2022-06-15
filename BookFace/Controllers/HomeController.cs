@@ -1,5 +1,4 @@
 ﻿using BookFace.Models;
-using BookFace.Services.Home;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -9,6 +8,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using BookFace.Infrastructure.Extensions;
 using BookFace.Models.Home;
+using BookFace.Services.Friendship;
+using BookFace.Services.Friend;
+using BookFace.Services.Post;
 
 namespace BookFace.Controllers
 {
@@ -16,20 +18,32 @@ namespace BookFace.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
-        private readonly IHomeService homeService;
+        private readonly IFriendshipService friendshipService;
 
-        public HomeController(ILogger<HomeController> logger, IHomeService homeService)
+        private readonly IPostService postService;
+
+        private readonly IFriendService friendService;
+
+        public HomeController(
+            IFriendshipService friendshipService, 
+            IPostService postService, 
+            IFriendService friendService)
         {
-            _logger = logger;
-            this.homeService = homeService;
+            this.friendshipService = friendshipService;
+            this.postService = postService;
+            this.friendService = friendService;
         }
 
-        public IActionResult Index()
+        public IActionResult Index([FromQuery] HomePostSuggestionQueryModel query)
         {
-            var model = new HomePostSuggestionModel();
+            var model = new HomePostSuggestionQueryModel();
             if (User.Identity.IsAuthenticated)
             {
-               model = homeService.IndexModel(User.Id());
+                model.User = friendService.ChatFriend(User.Id());
+                model.Suggestions = friendshipService.Suggestions(User.Id(), 10);
+                model.Posts = postService.Posts(User.Id(), query.CurrentPage, HomePostSuggestionQueryModel.PostsPerPage);
+                model.TotalPosts = postService.TotalPosts(User.Id());
+                model.CurrentPage = query.CurrentPage;
             }
             return View(model);
         }

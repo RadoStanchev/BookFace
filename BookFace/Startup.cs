@@ -7,7 +7,6 @@ using BookFace.Services.Chat;
 using BookFace.Services.Comment;
 using BookFace.Services.Friend;
 using BookFace.Services.Friendship;
-using BookFace.Services.Home;
 using BookFace.Services.Message;
 using BookFace.Services.Post;
 using BookFace.Services.System;
@@ -35,7 +34,8 @@ namespace BookFace
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
+                o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)));
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -68,7 +68,6 @@ namespace BookFace
             services.AddTransient<IPostService, PostService>();
             services.AddTransient<IFriendService, FriendService>();
             services.AddTransient<IFriendshipService, FriendshipService>();
-            services.AddTransient<IHomeService, HomeService>();
 
             services.AddControllersWithViews(options =>
             {
@@ -78,7 +77,7 @@ namespace BookFace
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment() || true)
+            if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseMigrationsEndPoint();

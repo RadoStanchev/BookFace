@@ -50,11 +50,18 @@ namespace BookFace.Services.Comment
 
         public ICollection<HomePostCommentModel> IndexPostComments(string postId)
         {
-            return data.Comments
+            var comments = data.Comments
                         .AsQueryable()
                         .Where(x => x.PostId == postId)
-                        .Select(x => new HomePostCommentModel
-                        {
+                         .ToList();
+
+            return IndexPostComments(comments);
+        }
+
+        public ICollection<HomePostCommentModel> IndexPostComments(IEnumerable<Comment> comments)
+        {
+            return comments.Select(x => new HomePostCommentModel
+            {
                             Content = x.Content,
                             Owner = applicationUserService.Owner(x.CreatorId),
                             DateDiff = x.CreatedOn.ToString("dddd, dd MMMM yyyy HH:mm"),

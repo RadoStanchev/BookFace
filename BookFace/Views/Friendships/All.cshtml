@@ -32,7 +32,7 @@
                                     }
                                     else if (friendshipService.CanRequest(User.Id(), friend.Id))
                                     {
-                                        <button class="btn btn-outline-primary" value="AddFriend<">Add Friend</button>
+                                        <button class="btn btn-outline-primary" value="AddFriend">Add Friend</button>
                                     }
                                     else if (friendshipService.CanAcceptOrDeny(User.Id(), friend.Id))
                                     {
@@ -72,7 +72,7 @@
 
                     <div class="row mb-5 align-self-center">
                         <div class="col-md-6">
-                            <a class="btn btn-primary" @(Model.CurrentPage == 1 ? "hidden disabled" : string.Empty)
+                            <a class="btn btn-primary @(Model.CurrentPage == 1 ? "hidden disabled" : string.Empty)"
                                style="margin-left: 20px"
                                asp-controller="@typeof(FriendshipsController).GetControllerName()"
                                asp-action="@nameof(FriendshipsController.All)"
@@ -80,7 +80,7 @@
                                asp-route-searchTerm="@Model.SearchTerm"><</a>
                         </div>
                         <div class="col-md-6">
-                            <a class="btn btn-primary float-sm-right" @(shouldButtonBeDisabled ? "hidden disabled" : string.Empty) style="margin-right: 20px"
+                            <a class="btn btn-primary float-sm-right @(shouldButtonBeDisabled ? "hidden disabled" : string.Empty)" style="margin-right: 20px"
                                asp-controller="@typeof(FriendshipsController).GetControllerName()"
                                asp-action="@nameof(FriendshipsController.All)"
                                asp-route-currentPage="@(Model.CurrentPage + 1)"

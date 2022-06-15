@@ -1,4 +1,5 @@
-﻿using BookFace.Models.User;
+﻿using BookFace.Data.Models;
+using BookFace.Models.User;
 using System.Collections.Generic;
 
 namespace BookFace.Services.ApplicationUsers
@@ -26,5 +27,7 @@ namespace BookFace.Services.ApplicationUsers
         bool Edit(string userId, string username, string email, string firstName, string lastName);
 
         HomeOwnerModel Owner(string creatorId);
+
+        HomeOwnerModel Owner(ApplicationUser user);
     }
 }

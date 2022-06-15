@@ -16,9 +16,7 @@ namespace BookFace.Infrastructure
            .Build();
 
             var builder = new DbContextOptionsBuilder<ApplicationDbContext>();
-            var connectionString = configuration.GetConnectionString("DefaultConnection");
-
-            builder.UseSqlServer(connectionString);
+            //builder.MultipleActiveResultSets = true;
 
             return new ApplicationDbContext(builder.Options);
         }

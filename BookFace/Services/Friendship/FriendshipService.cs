@@ -17,7 +17,6 @@ namespace BookFace.Services.Friendship
         private readonly List<FriendshipStatus> badStatuses = new List<FriendshipStatus>()
         {
             FriendshipStatus.Blocked,
-            FriendshipStatus.Accepted,
             FriendshipStatus.Requested,
         };
 
@@ -271,7 +270,10 @@ namespace BookFace.Services.Friendship
 
         public IEnumerable<Friendship> MyFriendships(string userId)
         {
-            return data.Friendships.Where(x => x.FirstUserId == userId || x.SecondUserId == userId).ToList();
+            return data.Friendships.Where(x => x.FirstUserId == userId || x.SecondUserId == userId)
+                .AsEnumerable()
+                .Where(x => AreFriends(x))
+                .ToList();
         }
 
         public IEnumerable<string> MyFriendsId(string userId)
@@ -281,7 +283,10 @@ namespace BookFace.Services.Friendship
 
         public IEnumerable<string> MyFriendsId(string userId, IEnumerable<Friendship> myFriendships)
         {
-            return myFriendships.Select(x => x.FirstUserId != userId ? x.FirstUserId : x.SecondUserId);
+            return myFriendships
+               .Select(x => x.FirstUserId != userId ? x.FirstUserId : x.SecondUserId)
+               .Where(x => AreFriends(userId, x))
+               .ToList();
         }
 
         public bool PrepareIds(ref string firsrId, ref string secondId)
@@ -340,7 +345,7 @@ namespace BookFace.Services.Friendship
                 .Include(x => x.SecondUser)
                 .AsEnumerable()
                 .Where(x => myFriendships.Contains(x) == false)
-                .Where(x => myFriends.Contains(x.FirstUserId) || myFriends.Contains(x.SecondUserId))
+                .Where(x => (myFriends.Contains(x.FirstUserId) || myFriends.Contains(x.SecondUserId)) && AreFriends(x))
                 .Select(x => myFriends.Contains(x.FirstUserId) ? x.SecondUserId : x.FirstUserId)
                 .GroupBy(x => x)
                 .Where(x => CanRequest(userId, x.Key))
@@ -358,12 +363,12 @@ namespace BookFace.Services.Friendship
                      .Where(x => myFriendships.Contains(x) == false)
                      .Where(x => myFriends.Contains(x.FirstUserId) == false && myFriends.Contains(x.SecondUserId) == false)
                      .Select(x => x.FirstUserId)
-                     .Where(x => CanRequest(userId, x))
                      .Distinct()
+                     .Where(x => suggestionIds.Any(y => y.Key == x) == false)
+                     .Where(x => CanRequest(userId, x))
                      .ToDictionary(x => x, x => 0)
                      .Take(count - suggestionIds.Count())
-                     .ToList()
-               );
+                     .ToList());
             }
 
             if (suggestionIds.Count() < count)
@@ -412,6 +417,11 @@ namespace BookFace.Services.Friendship
         public Friendship Friendship(string firstId, string secondId)
         {
             return data.Friendships.FirstOrDefault(x => (x.FirstUserId == firstId && x.SecondUserId == secondId) || (x.FirstUserId == secondId && x.SecondUserId == firstId));
+        }
+
+        public int TotalPeople()
+        {
+            return data.Friends.Count();
         }
     }
 }
