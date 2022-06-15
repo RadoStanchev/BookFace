@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace BookFace.Services.Chat
 {
-    using Chat = BookFace.Data.Models.Chat;
     public interface IChatService
     {
         string CreateChat();
@@ -14,9 +13,5 @@ namespace BookFace.Services.Chat
         string ChatId(string firstId, string secondId);
 
         ChatModel ChatModel(string chatId, string friendId);
-
-        bool IsSoloChat(string chatId);
-
-        bool IsSoloChat(Chat chat);
     }
 }

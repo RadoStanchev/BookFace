@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 using BookFace.Data;
 using System.IO;
-using Microsoft.Data.SqlClient;
 
 namespace BookFace.Infrastructure
 {
@@ -16,9 +15,10 @@ namespace BookFace.Infrastructure
            .AddJsonFile("appsettings.json")
            .Build();
 
-
             var builder = new DbContextOptionsBuilder<ApplicationDbContext>();
-            //builder.MultipleActiveResultSets = true;
+            var connectionString = configuration.GetConnectionString("DefaultConnection");
+
+            builder.UseSqlServer(connectionString);
 
             return new ApplicationDbContext(builder.Options);
         }

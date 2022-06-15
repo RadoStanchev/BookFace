@@ -2,7 +2,6 @@
 using BookFace.Models.Chat;
 using BookFace.Services.Friend;
 using BookFace.Services.Message;
-using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
 namespace BookFace.Services.Chat
@@ -50,17 +49,6 @@ namespace BookFace.Services.Chat
             data.SaveChanges();
 
             return chat.Id;
-        }
-
-        public bool IsSoloChat(string chatId)
-        {
-            var chat = data.Chats.Include(x => x.Friendship).FirstOrDefault(x => x.Id == chatId);
-            return IsSoloChat(chat);
-        }
-
-        public bool IsSoloChat(Chat chat)
-        {
-            return chat.Friendship.FirstUserId == chat.Friendship.SecondUserId;
         }
     }
 }

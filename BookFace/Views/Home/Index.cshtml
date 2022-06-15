@@ -1,28 +1,15 @@
-﻿@model HomePostSuggestionQueryModel
+﻿@model HomePostSuggestionModel
 @{
     ViewData["Title"] = "Home Page";
 }
 @inject SignInManager<ApplicationUser> SignInManager
-@{ 
-    var serverVersion = string.Empty;
-    var serverState = string.Empty;
-    using (SqlConnection connection = new SqlConnection("Server=SQL8003.site4now.net;Initial Catalog=db_a86a6e_bookface;User Id=db_a86a6e_bookface_admin;Password=radoslav12;MultipleActiveResultSets=true;"))
-    {
-        connection.Open();
-        serverVersion = string.Format("ServerVersion: {0}", connection.ServerVersion);
-        serverState = string.Format("State: {0}", connection.State);
-    }
-}
 
 @if (!SignInManager.IsSignedIn(User))
 {
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p> @serverVersion</p>
-    <p> @serverState</p>
-    <p> @System.Environment.Version</p>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+    <div class="text-center">
+        <h1 class="display-4">Welcome</h1>
+        <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    </div>
 }
 else
 {

@@ -50,8 +50,6 @@ namespace BookFace.Services.Friendship
 
         IEnumerable<FriendModel> People(string userId, string searchTerm, int currentPage, int poeplePerPage);
 
-        int TotalPeople();
-
         Friendship Friendship(string firstId, string secondId);
 
     }

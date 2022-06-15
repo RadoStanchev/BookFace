@@ -1,7 +1,6 @@
 ﻿using BookFace.Infrastructure.Extensions;
 using BookFace.Models.Friendship;
 using BookFace.Services.Friendship;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -10,7 +9,6 @@ using System.Threading.Tasks;
 
 namespace BookFace.Controllers
 {
-    [Authorize]
     public class FriendshipsController : Controller
     {
         private readonly IFriendshipService friendshipService;
@@ -28,7 +26,7 @@ namespace BookFace.Controllers
                 FriendshipQueryModel.PeoplePerPage);
 
             query.CurrentPeople = people;
-            query.TotalPeople = friendshipService.TotalPeople();
+            query.TotalPeople = people.Count();
             return View(query);
         }
     }

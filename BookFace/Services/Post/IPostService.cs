@@ -17,9 +17,7 @@ namespace BookFace.Services.Post
 
         HomePostModel Post(string postId, string userId);
 
-        IEnumerable<HomePostModel> Posts(string userId, int currentPage, int postsPerPage);
-
-        int TotalPosts(string userId);
+        IEnumerable<HomePostModel> Posts(string userId, int count);
 
         bool CanLike(string postId, string userId);
 

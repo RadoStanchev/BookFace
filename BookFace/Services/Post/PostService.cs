@@ -116,35 +116,25 @@ namespace BookFace.Services.Post
             };
         }
 
-        public IEnumerable<HomePostModel> Posts(string userId, int currentPage, int postsPerPage)
+        public IEnumerable<HomePostModel> Posts(string userId, int count)
         {
             var myFriends = friendshipService.MyFriendsId(userId);
             var user = data.ApplicationUsers.FirstOrDefault(x => x.Id == userId);
             return data.Posts
                     .Include(x => x.Likes)
-                    .Include(x => x.Comments)
-                    .AsEnumerable()
                     .Where(x => myFriends.Contains(x.CreatorId))
                     .OrderByDescending(x => x.CreatedOn)
-                    .Skip((currentPage - 1) * postsPerPage)
-                    .Take(postsPerPage)
                     .Select(x => new HomePostModel
                     {
                         Id = x.Id,
                         Content = x.Content,
                         Image = x.Image,
-                        Comments = commentService.IndexPostComments(x.Comments),
+                        Comments = commentService.IndexPostComments(x.Id),
                         Owner = applicationUserService.Owner(x.CreatorId),
                         DateDiff = x.CreatedOn.ToString("dddd, dd MMMM yyyy HH:mm"),
                         IsLiked = x.Likes.Contains(user),
                     })
-                    .ToList();
-        }
-
-        public int TotalPosts(string userId)
-        {
-            var myFriends = friendshipService.MyFriendsId(userId);
-            return data.Posts.Where(x => myFriends.Contains(x.CreatorId)).Count();
+                    .Take(count);
         }
     }
 }
