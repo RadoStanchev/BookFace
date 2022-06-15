@@ -1,4 +1,5 @@
 ﻿using BookFace.Models;
+using BookFace.Services.Home;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -8,9 +9,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using BookFace.Infrastructure.Extensions;
 using BookFace.Models.Home;
-using BookFace.Services.Friendship;
-using BookFace.Services.Post;
-using BookFace.Services.Friend;
 
 namespace BookFace.Controllers
 {
@@ -18,29 +16,20 @@ namespace BookFace.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
-        private readonly IFriendshipService friendshipService;
+        private readonly IHomeService homeService;
 
-        private readonly IPostService postService;
-
-        private readonly IFriendService friendService;
-
-        public HomeController(IFriendshipService friendshipService, IPostService postService, IFriendService friendService)
+        public HomeController(ILogger<HomeController> logger, IHomeService homeService)
         {
-            this.friendshipService = friendshipService;
-            this.postService = postService;
-            this.friendService = friendService;
+            _logger = logger;
+            this.homeService = homeService;
         }
 
-        public IActionResult Index([FromQuery] HomePostSuggestionQueryModel query)
+        public IActionResult Index()
         {
-            var model = new HomePostSuggestionQueryModel();
+            var model = new HomePostSuggestionModel();
             if (User.Identity.IsAuthenticated)
             {
-                model.User = friendService.ChatFriend(User.Id());
-                model.Suggestions = friendshipService.Suggestions(User.Id(), 10);
-                model.Posts = postService.Posts(User.Id(), query.CurrentPage, HomePostSuggestionQueryModel.PostsPerPage);
-                model.TotalPosts = postService.TotalPosts(User.Id());
-                model.CurrentPage = query.CurrentPage;
+               model = homeService.IndexModel(User.Id());
             }
             return View(model);
         }

@@ -20,12 +20,12 @@ chatConnection.on('GetAllOnlineFriends', (users) => {
     let source = document.getElementById('allFriendsTemplate').innerHTML;
     let template = Handlebars.compile(source);
     let resultHTML = template({ users });
-    section.innerHTML = resultHTML;
+    section.innerHTML += resultHTML;
 });
 
 chatConnection.on('RemoveFriend', (userId) => {
     let section = document.getElementById('friends');
-    let child = section.querySelectorAll(`input[value="${userId}"]`)[0].parentElement;
+    let child = section.querySelectorAll('input[value=' + userId +']')[0];
     section.removeChild(child);
 });
 
@@ -58,25 +58,12 @@ document.getElementById('friends').addEventListener('click', (e) => {
     e.preventDefault();
     let { target } = e;
 
-    if(target.nodeName.toLowerCase() == 'ul'){
-        return;
-    }
-
     let parent = target;
     while(parent.nodeName.toLowerCase() != 'li'){
         parent = parent.parentElement;
     }
 
     let friendId = parent.getElementsByTagName('input')[0].value;
-
-    let chatInput = document.getElementById('chatId');
-    if(chatInput !== null){
-        chatConnection.invoke('LeaveGroup', chatInput.value)
-        .then(() => console.log('Leave chat'))
-        .catch(function (err) {
-            console.log(err.toString());
-        });
-    }
 
     chatConnection.invoke('JoinGroup', friendId)
         .then(() => console.log('Join chat'))
@@ -127,16 +114,3 @@ chatConnection.on('RecieveMessage', (message, isSolo) => {
     }
     bottomSection.innerHTML += resultHTML;
 });
-
-chatConnection.on('CloseChat', () => {
-
-});
-
-document.getElementById('searchBar').addEventListener('click', (e) => search(e));
-document.getElementById('searchBar').addEventListener('change', (e) => search(e));
-
-function search(e){
-    e.preventDefault();
-    let searchTerms = document.getElementById('searchBar').getElementsByTagName('input')[0].value;
-    chatConnection.invoke('Search', searchTerms);
-}

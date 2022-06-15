@@ -1,4 +1,4 @@
-﻿@model HomePostSuggestionQueryModel
+﻿@model HomePostSuggestionModel
 <link rel="stylesheet" href="~/css/HomePage.css">
 <div class="container">
     <div class="profile-page tx-13">
@@ -68,8 +68,8 @@
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-heart icon-md" style="display: @( post.IsLiked ? "none" : "block")">
                                                         <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
                                                     </svg>
-                                                    <img @(post.IsLiked ? "hidden" : string.Empty) src="~/images/icons/1876889.png" width="24" height="24" />
-                                                    <p class="d-none d-md-block ml-2">@(post.IsLiked ? "Dislike" : "Like")</p>
+                                                    <img @(post.IsLiked ? "hidden" : string.Empty) src="~/images/1876899.png" width="24" height="24" />
+                                                    <p class="d-none d-md-block ml-2">Like</p>
                                                 </a>
                                                 <a href="javascript:;" class="d-flex align-items-center text-muted mr-4 commentButton">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-message-square icon-md">
@@ -105,8 +105,8 @@
                                                         <p class="d-none d-md-block ml-2">Send</p>
                                                     </a>
                                                 </div>
+                                                </div>
                                             </div>
-                                        </div>
                                         <div class="usersComments">
                                             @foreach (var comment in post.Comments)
                                             {
@@ -132,40 +132,6 @@
                                     </div>
                                 </div>
                             }
-                        </div>
-                        <div class="col-md-12">
-                            <div class="card rounded">
-                                <div class="card-header">
-                                    <div class="d-flex align-items-center justify-content-between">
-                                        @{
-                                            var previousPage = Model.CurrentPage - 1;
-                                            if (previousPage < 1)
-                                            {
-                                                previousPage = 1;
-                                            }
-
-                                            var maxPage = Math.Ceiling((double)Model.TotalPosts / HomePostSuggestionQueryModel.PostsPerPage);
-
-                                            var shouldButtonBeDisabled = Model.CurrentPage == maxPage || !Model.Posts.Any();
-                                        }
-
-                                            <div class="col-md-6 justify-content-left">
-                                                <a class="btn btn-primary @(Model.CurrentPage == 1 ? "disabled" : string.Empty)"
-                                                   style="margin-left: 20px"
-                                                   asp-controller="@typeof(HomeController).GetControllerName()"
-                                                   asp-action="@nameof(HomeController.Index)"
-                                                   asp-route-currentPage="@previousPage"><</a>
-                                            </div>
-                                            <div class="col-md-6 justify-content-right">
-                                                <a class="btn btn-primary float-sm-right @(shouldButtonBeDisabled ? "disabled" : string.Empty)" style="margin-right: 20px"
-                                                   asp-controller="@typeof(HomeController).GetControllerName()"
-                                                   asp-action="@nameof(HomeController.Index)"
-                                                   asp-route-currentPage="@(Model.CurrentPage + 1)">
-                                                ></a>
-                                            </div>
-                                        </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>

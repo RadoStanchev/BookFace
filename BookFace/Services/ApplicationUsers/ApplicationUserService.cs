@@ -75,11 +75,6 @@ namespace BookFace.Services.ApplicationUsers
         public HomeOwnerModel Owner(string creatorId)
         {
             var user = data.ApplicationUsers.FirstOrDefault(x => x.Id == creatorId);
-            return Owner(user);
-        }
-
-        public HomeOwnerModel Owner(ApplicationUser user)
-        {
             return new HomeOwnerModel
             {
                 FirstName = user.FirstName,
