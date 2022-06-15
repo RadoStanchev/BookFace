@@ -42,10 +42,13 @@ namespace BookFace.Hubs
             }
 
             var myFriends = friendshipService.MyFriendsId(Context.User.Id());
-            var onlineFriends = myFriends.Intersect(ConnectionsMap.Keys);
+            var onlineFriends = myFriends.Intersect(ConnectionsMap.Keys)
+                .Where(x => x != Context.User.Id())
+                .ToList();
 
             Clients.Users(onlineFriends).SendAsync("GetNewOnline", user);
 
+            onlineFriends.Add(Context.User.Id());
             var onlineFriendsModels = ConnectionsMap.Where(x => onlineFriends.Contains(x.Key)).Select(x => x.Value);
 
             Clients.Caller.SendAsync("GetAllOnlineFriends", onlineFriendsModels);
@@ -71,7 +74,7 @@ namespace BookFace.Hubs
 
             var message = messageService.Message(messageId);
 
-            var isSolo = message.CreatorId == Context.User.Id();
+            var isSolo = chatService.IsSoloChat(chatId);
 
             return Clients.Group(chatId).SendAsync("RecieveMessage", message, isSolo);
         }
@@ -87,6 +90,37 @@ namespace BookFace.Hubs
             var isSolo = friendId == Context.User.Id();
 
             return Clients.Caller.SendAsync("ShowChat", chatModel, isSolo);
+        }
+
+        public Task LeaveGroup(string chatId)
+        {
+            Groups.RemoveFromGroupAsync(Context.ConnectionId, chatId);
+
+            return Clients.Caller.SendAsync("CloseChat");
+        }
+
+        public Task Search(string searchTerm)
+        {
+            var filterFriendsModels = ConnectionsMap.ToList();
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                var searchTerms = searchTerm.Split(" ", StringSplitOptions.RemoveEmptyEntries).Select(x => x.ToLower());
+                Predicate<UserServiceModel> predicate = x =>
+                {
+                    var names = (x.FirstName + x.LastName).ToLower();
+                    return searchTerms.Any(st => names.Contains(st));
+                };
+
+                filterFriendsModels = filterFriendsModels.Where(x => predicate(x.Value)).ToList();
+            }
+
+            var myFriends = friendshipService.MyFriendsId(Context.User.Id());
+            var onlineFriendsModels = filterFriendsModels
+                .Where(x => myFriends.Contains(x.Key))
+                .Select(x => x.Value)
+                .ToList();
+
+            return Clients.Caller.SendAsync("GetAllOnlineFriends", onlineFriendsModels);
         }
     }
 }

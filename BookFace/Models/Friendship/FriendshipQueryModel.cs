@@ -5,7 +5,7 @@ namespace BookFace.Models.Friendship
 {
     public class FriendshipQueryModel
     {
-        public const int PeoplePerPage = 10;
+        public const int PeoplePerPage = 7;
 
         public IEnumerable<FriendModel> CurrentPeople { get; set; }
 
