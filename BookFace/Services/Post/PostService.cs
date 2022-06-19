@@ -62,7 +62,7 @@ namespace BookFace.Services.Post
             return post.Id;
         }
 
-        public bool DisLikePost(string postId, string userId)
+        public bool UnLikePost(string postId, string userId)
         {
             var post = data.Posts.FirstOrDefault(x => x.Id == postId);
             var user = data.ApplicationUsers.Include(x => x.Likes).FirstOrDefault(x => x.Id == userId);

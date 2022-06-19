@@ -68,8 +68,8 @@
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-heart icon-md" style="display: @( post.IsLiked ? "none" : "block")">
                                                         <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
                                                     </svg>
-                                                    <img @(post.IsLiked ? "hidden" : string.Empty) src="~/images/icons/1876899.png" width="24" height="24" />
-                                                    <p class="d-none d-md-block ml-2">@(post.IsLiked ? "Dislike" : "Like")</p>
+                                                    <img src="https://i.postimg.cc/yNBSP4KP/png-formatinda-kalp-resimleri-5.png" width="24" height="24" @(post.IsLiked ? string.Empty : "hidden") />
+                                                    <p class="d-none d-md-block ml-2">@(post.IsLiked ? "Unlike" : "Like")</p>
                                                 </a>
                                                 <a href="javascript:;" class="d-flex align-items-center text-muted mr-4 commentButton">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-message-square icon-md">
@@ -133,45 +133,78 @@
                                 </div>
                             }
                         </div>
-                    </div>
-                </div>
-            </div>
-            <!-- middle wrapper end -->
-            <!-- right wrapper start -->
-            <div id="suggestions" class="d-none d-xl-block col-xl-3 right-wrapper">
-                <div class="row">
-                    <div class="col-md-12 grid-margin">
-                        <div class="card rounded">
-                            <div class="card-body">
-                                <h6 class="card-title">suggestions for you</h6>
-                                @foreach (var suggestion in Model.Suggestions)
-                                {
-                                    <div class="d-flex justify-content-between mb-2 pb-2 border-bottom">
-                                        <div class="d-flex align-items-center hover-pointer">
-                                            <img class="img-xs rounded-circle" src="@suggestion.ProfileImagePath" alt="">
-                                            <div class="ml-2">
-                                                <p>@suggestion.FirstName @suggestion.LastName</p>
-                                                <p class="tx-11 text-muted">@suggestion.MutualFriendsCount Mutual Friends</p>
-                                            </div>
-                                            <input hidden value="@suggestion.Id" />
+                        <div class="col-md-12">
+                            <div class="card rounded">
+                                <div class="card-header">
+                                    @{
+                                        var previousPage = Model.CurrentPage - 1;
+                                        if (previousPage < 1)
+                                        {
+                                            previousPage = 1;
+                                        }
+
+                                        var maxPage = Math.Ceiling((double)Model.TotalPosts / FriendshipQueryModel.PeoplePerPage);
+
+                                        var shouldButtonBeDisabled = Model.CurrentPage == maxPage || !Model.Posts.Any();
+                                    }
+
+                                    <div class="row mb-5 align-self-center">
+                                        <div class="col-md-6">
+                                            <a class="btn btn-primary @(Model.CurrentPage == 1 ? "hidden disabled" : string.Empty)"
+                                               style="margin-left: 20px"
+                                               asp-controller="@typeof(HomeController).GetControllerName()"
+                                               asp-action="@nameof(HomeController.Index)"
+                                               asp-route-currentPage="@previousPage"><</a>
                                         </div>
-                                        <button class="btn btn-icon">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user-plus" data-toggle="tooltip" title="" data-original-title="Connect">
-                                                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                                                <circle cx="8.5" cy="7" r="4"></circle>
-                                                <line x1="20" y1="8" x2="20" y2="14"></line>
-                                                <line x1="23" y1="11" x2="17" y2="11"></line>
-                                            </svg>
-                                        </button>
+                                        <div class="col-md-6">
+                                            <a class="btn btn-primary float-sm-right @(shouldButtonBeDisabled ? "hidden disabled" : string.Empty)" style="margin-right: 20px"
+                                               asp-controller="@typeof(HomeController).GetControllerName()"
+                                               asp-action="@nameof(HomeController.Index)"
+                                               asp-route-currentPage="@(Model.CurrentPage + 1)">></a>
+                                        </div>
                                     </div>
-                                }
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <!-- right wrapper end -->
-        </div>
+                            </div>
+                        </div>
+                        <!-- middle wrapper end -->
+                        <!-- right wrapper start -->
+                        <div id="suggestions" class="d-none d-xl-block col-xl-3 right-wrapper">
+                            <div class="row">
+                                <div class="col-md-12 grid-margin">
+                                    <div class="card rounded">
+                                        <div class="card-body">
+                                            <h6 class="card-title">suggestions for you</h6>
+                                            @foreach (var suggestion in Model.Suggestions)
+                                            {
+                                                <div class="d-flex justify-content-between mb-2 pb-2 border-bottom">
+                                                    <div class="d-flex align-items-center hover-pointer">
+                                                        <img class="img-xs rounded-circle" src="@suggestion.ProfileImagePath" alt="">
+                                                        <div class="ml-2">
+                                                            <p>@suggestion.FirstName @suggestion.LastName</p>
+                                                            <p class="tx-11 text-muted">@suggestion.MutualFriendsCount Mutual Friends</p>
+                                                        </div>
+                                                        <input hidden value="@suggestion.Id" />
+                                                    </div>
+                                                    <button class="btn btn-icon">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user-plus" data-toggle="tooltip" title="" data-original-title="Connect">
+                                                            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                                            <circle cx="8.5" cy="7" r="4"></circle>
+                                                            <line x1="20" y1="8" x2="20" y2="14"></line>
+                                                            <line x1="23" y1="11" x2="17" y2="11"></line>
+                                                        </svg>
+                                                    </button>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- right wrapper end -->
+                    </div>
     </div>
 </div>
 
@@ -208,7 +241,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-heart icon-md">
                             <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
                         </svg>
-                        <img src="~/images/1876899.png" width="24" height="24" hidden />
+                        <img src="https://cutewallpaper.org/24/heart-png-image/278113479.jpg" width="24" height="24" hidden />
                         <p class="d-none d-md-block ml-2">Like</p>
                     </a>
                     <a href="javascript:;" class="d-flex align-items-center text-muted mr-4 commentButton">
@@ -276,7 +309,9 @@
 </script>
 
 <script id="succesfulRequest" type="text/x-handlebars-template">
-    <img src="https://static.thenounproject.com/png/682471-200.png">
+    <div class="justify-content-center">
+        <img src="https://static.thenounproject.com/png/682471-200.png" height="48" width="48">
+    </div>
 </script>
 
 <script src="~/js/homePage.js"></script>

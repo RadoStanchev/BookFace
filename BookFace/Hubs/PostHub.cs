@@ -3,6 +3,7 @@ using BookFace.Models.Comment;
 using BookFace.Models.Post;
 using BookFace.Services.Comment;
 using BookFace.Services.Friend;
+using BookFace.Services.Friendship;
 using BookFace.Services.Post;
 using BookFace.Services.System;
 using Microsoft.AspNetCore.SignalR;
@@ -22,15 +23,19 @@ namespace BookFace.Hubs
         private readonly IFriendService friendService;
 
         private readonly IValidator validator;
+
+        private readonly IFriendshipService friendshipService;
         public PostHub(IPostService postService, 
             IValidator validator, 
             ICommentService commentService, 
-            IFriendService friendService)
+            IFriendService friendService,
+            IFriendshipService friendshipService)
         {
             this.postService = postService;
             this.validator = validator;
             this.commentService = commentService;
             this.friendService = friendService;
+            this.friendshipService = friendshipService;
         }
         public Task CreatePost(string content, string image)
         {
@@ -50,7 +55,9 @@ namespace BookFace.Hubs
             var postId = postService.CreatePost(Context.User.Id(), content, image);
             var user = friendService.ChatFriend(Context.User.Id());
 
-            return Clients.Caller.SendAsync("ShowPost", postService.Post(postId, Context.User.Id()), user);
+            var myFriendsId = friendshipService.MyFriendsId(Context.User.Id()); 
+
+            return Clients.Users(myFriendsId).SendAsync("ShowPost", postService.Post(postId, Context.User.Id()), user);
         }
 
         public Task CreateComment(string content, string postId)
@@ -70,7 +77,7 @@ namespace BookFace.Hubs
 
             var commentId = commentService.CreateComment(Context.User.Id(), postId, content);
 
-            return Clients.Caller.SendAsync("ShowComment", commentService.Comment(commentId), postId);
+            return Clients.All.SendAsync("ShowComment", commentService.Comment(commentId), postId);
         }
 
         public Task LikePost(string postId)
@@ -81,9 +88,9 @@ namespace BookFace.Hubs
             return Clients.All.SendAsync("ChangeLikesCount", postId, count);
         }
 
-        public Task DisLikePost(string postId)
+        public Task UnLikePost(string postId)
         {
-            postService.DisLikePost(postId, Context.User.Id());
+            postService.UnLikePost(postId, Context.User.Id());
             var count = postService.LikesCount(postId);
 
             return Clients.All.SendAsync("ChangeLikesCount", postId, count);

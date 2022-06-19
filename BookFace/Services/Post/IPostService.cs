@@ -27,7 +27,7 @@ namespace BookFace.Services.Post
 
         bool LikePost(string postId, string userId);
 
-        bool DisLikePost(string postId, string userId);
+        bool UnLikePost(string postId, string userId);
 
         int LikesCount(string postId);
     }

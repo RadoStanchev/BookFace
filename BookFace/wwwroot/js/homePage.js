@@ -184,11 +184,11 @@ document.getElementById('posts').addEventListener('click', e => {
 
     if (pEl.textContent == 'Like') {
         postConnection.invoke('LikePost', postId);
-        pEl.textContent = 'Dislike';
+        pEl.textContent = 'Unlike';
         svgEl.style.display = 'none';
         imgEl.hidden = false;
     } else {
-        postConnection.invoke('DisLikePost', postId);
+        postConnection.invoke('UnLikePost', postId);
         pEl.textContent = 'Like';
         svgEl.style.display = 'block';
         imgEl.hidden = true;
