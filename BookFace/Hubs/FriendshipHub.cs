@@ -41,9 +41,9 @@ namespace BookFace.Hubs
             await Task.Run(async () => friendshipService.UnBlock(Context.User.Id(), friendId));
         }
 
-        public async Task SendBrakeUp(string friendId)
+        public async Task SendBreakUp(string friendId)
         {
-            await Task.Run(async () => friendshipService.BrakeUp(Context.User.Id(), friendId));
+            await Task.Run(async () => friendshipService.BreakUp(Context.User.Id(), friendId));
         }
     }
 }
