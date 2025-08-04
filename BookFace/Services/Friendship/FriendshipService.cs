@@ -102,7 +102,7 @@ namespace BookFace.Services.Friendship
             return true;
         }
 
-        public bool BrakeUp(string firstId, string secondId)
+        public bool BreakUp(string firstId, string secondId)
         {
             var isPrepared = PrepareIds(ref firstId, ref secondId);
 

@@ -28,7 +28,7 @@
                                     <input hidden value="@friend.Id" />
                                     @if (friendshipService.AreFriends(User.Id(), friend.Id))
                                     {
-                                        <button class="btn btn-outline-dark" value="BrakeUp">Brake up</button>
+                                        <button class="btn btn-outline-dark" value="BreakUp">Break up</button>
                                     }
                                     else if (friendshipService.CanRequest(User.Id(), friend.Id))
                                     {
@@ -93,8 +93,8 @@
     </div>
 </div>
 
-<script id="brakeUpTemplate" type="text/x-handlebars-template">
-    <button class="btn btn-outline-dark" value="BrakeUp">Brake up</button>
+<script id="breakUpTemplate" type="text/x-handlebars-template">
+    <button class="btn btn-outline-dark" value="BreakUp">Break up</button>
 </script>
 
 <script id="addFriendTemplate" type="text/x-handlebars-template">

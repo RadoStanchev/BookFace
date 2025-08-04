@@ -18,7 +18,7 @@ namespace BookFace.Services.Friendship
 
         bool Deny(string firstId, string secondId);
 
-        bool BrakeUp(string firstId, string secondId);
+        bool BreakUp(string firstId, string secondId);
 
         Friendship CreateFriendship(string firstId, string secondId, FriendshipStatus firstStatus = FriendshipStatus.NoneAction, FriendshipStatus secondStatus = FriendshipStatus.NoneAction);
 

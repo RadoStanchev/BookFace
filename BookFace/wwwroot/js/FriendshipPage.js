@@ -29,7 +29,7 @@ document.getElementById('buttons').addEventListener('click', e => {
             friendshipConnection.invoke('SendAccept', friendId)
                 .then(() => {
                     removeAcceptAndDeny(parent);
-                    let source = document.getElementById('brakeUpTemplate').innerHTML;
+                    let source = document.getElementById('breakUpTemplate').innerHTML;
                     let template = Handlebars.compile(source);
                     let resultHTML = template();
                     parent.innerHTML = resultHTML + parent.innerHTML;
@@ -45,8 +45,8 @@ document.getElementById('buttons').addEventListener('click', e => {
                     parent.innerHTML = resultHTML + parent.innerHTMLHTML;
                 });
             break;
-        case 'BrakeUp':
-            friendshipConnection.invoke('SendBrakeUp', friendId)
+        case 'BreakUp':
+            friendshipConnection.invoke('SendBreakUp', friendId)
                 .then(() => {
                     parent.removeChild(target);
                     let source = document.getElementById('addFriendTemplate').innerHTML;
