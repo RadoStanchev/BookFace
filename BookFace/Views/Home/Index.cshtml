@@ -1,12 +1,14 @@
-﻿@model HomePostSuggestionQueryModel
+@model HomePostSuggestionQueryModel
+@using Microsoft.Extensions.Configuration
 @{
     ViewData["Title"] = "Home Page";
 }
 @inject SignInManager<ApplicationUser> SignInManager
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
 @{ 
     var serverVersion = string.Empty;
     var serverState = string.Empty;
-    using (SqlConnection connection = new SqlConnection("Server=SQL8003.site4now.net;Initial Catalog=db_a86a6e_bookface;User Id=db_a86a6e_bookface_admin;Password=radoslav12;MultipleActiveResultSets=true;"))
+    using (SqlConnection connection = new SqlConnection(Configuration.GetConnectionString("DefaultConnection")))
     {
         connection.Open();
         serverVersion = string.Format("ServerVersion: {0}", connection.ServerVersion);

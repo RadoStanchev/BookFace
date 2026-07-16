@@ -55,7 +55,7 @@ namespace BookFace
                 options.LogoutPath = $"/User/Logout";
             });
 
-            services.AddAutoMapper(typeof(Startup));
+            services.AddAutoMapper(cfg => { }, typeof(Startup).Assembly);
             services.AddRazorPages();
             services.AddMemoryCache();
             services.AddSignalR();

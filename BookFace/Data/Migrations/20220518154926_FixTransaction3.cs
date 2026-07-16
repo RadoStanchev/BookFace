@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace BookFace.Data.Migrations
 {
@@ -6,9 +6,9 @@ namespace BookFace.Data.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-              name: "Id",
-              table: "Friends");
+            // migrationBuilder.DropColumn(
+            //   name: "Id",
+            //   table: "Friends");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

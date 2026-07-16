@@ -1,4 +1,4 @@
-﻿using BookFace.Data.Models;
+using BookFace.Data.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,11 +9,6 @@ namespace BookFace.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
-        }
-
-        public ApplicationDbContext()
-        {
-
         }
 
         public DbSet<Chat> Chats { get; set; }
@@ -72,4 +67,5 @@ namespace BookFace.Data
             base.OnModelCreating(builder);
         }
     }
+
 }

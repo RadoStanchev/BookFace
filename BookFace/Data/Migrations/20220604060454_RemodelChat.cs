@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace BookFace.Data.Migrations
 {
@@ -6,17 +6,17 @@ namespace BookFace.Data.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            //migrationBuilder.DropForeignKey(
-            //    name: "FK_AspNetUsers_Chats_ChatId",
-            //    table: "AspNetUsers");
+            migrationBuilder.DropForeignKey(
+                name: "FK_AspNetUsers_Chats_ChatId",
+                table: "AspNetUsers");
 
-            //migrationBuilder.DropForeignKey(
-            //    name: "FK_Messages_Chats_ChatId",
-            //    table: "Messages");
+            migrationBuilder.DropForeignKey(
+                name: "FK_Messages_Chats_ChatId",
+                table: "Messages");
 
-            //migrationBuilder.DropIndex(
-            //    name: "IX_AspNetUsers_ChatId",
-            //    table: "AspNetUsers");
+            migrationBuilder.DropIndex(
+                name: "IX_AspNetUsers_ChatId",
+                table: "AspNetUsers");
 
             migrationBuilder.DropColumn(
                 name: "Type",
@@ -35,6 +35,10 @@ namespace BookFace.Data.Migrations
                 name: "Name",
                 table: "Chats",
                 newName: "FriendshipId");
+
+            migrationBuilder.DropPrimaryKey(
+                name: "PK_Messages",
+                table: "Messages");
 
             migrationBuilder.DropColumn(
               name: "Id",
@@ -65,6 +69,10 @@ namespace BookFace.Data.Migrations
                 table: "Friendships",
                 type: "nvarchar(450)",
                 nullable: true);
+
+            migrationBuilder.DropPrimaryKey(
+                name: "PK_Chats",
+                table: "Chats");
 
             migrationBuilder.DropColumn(
                 name: "Id",

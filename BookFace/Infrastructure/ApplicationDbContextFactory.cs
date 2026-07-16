@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 using BookFace.Data;
@@ -12,11 +12,12 @@ namespace BookFace.Infrastructure
         {
             IConfigurationRoot configuration = new ConfigurationBuilder()
            .SetBasePath(Directory.GetCurrentDirectory())
-           .AddJsonFile("appsettings.json")
+           .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+           .AddJsonFile("appsettings.Development.json", optional: true)
            .Build();
 
             var builder = new DbContextOptionsBuilder<ApplicationDbContext>();
-            //builder.MultipleActiveResultSets = true;
+            builder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
 
             return new ApplicationDbContext(builder.Options);
         }
