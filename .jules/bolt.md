@@ -1,0 +1,3 @@
+## 2023-10-27 - C# Entity Framework N+1 Pattern in LINQ
+**Learning:** In C# with Entity Framework, projecting an `IEnumerable<T>` (like `IEnumerable<Friendship>`) into a primitive list (like `string` IDs) before filtering them using an external method that queries the database (`AreFriends(userId, friendId)`) causes a severe N+1 problem.
+**Action:** When filtering a pre-loaded collection, always check if there's an overloaded method that accepts the entity itself (`AreFriends(Friendship)`) and apply the `Where` clause *before* the `Select` projection to keep the evaluation in-memory.
