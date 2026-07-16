@@ -283,9 +283,11 @@ namespace BookFace.Services.Friendship
 
         public IEnumerable<string> MyFriendsId(string userId, IEnumerable<Friendship> myFriendships)
         {
+            // ⚡ Bolt Optimization: Use the in-memory AreFriends(Friendship)
+            // instead of AreFriends(string, string) to avoid N+1 DB queries
             return myFriendships
+               .Where(x => AreFriends(x))
                .Select(x => x.FirstUserId != userId ? x.FirstUserId : x.SecondUserId)
-               .Where(x => AreFriends(userId, x))
                .ToList();
         }
 
