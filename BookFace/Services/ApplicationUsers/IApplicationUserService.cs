@@ -1,4 +1,4 @@
-﻿using BookFace.Data.Models;
+using BookFace.Data.Models;
 using BookFace.Models.User;
 using System.Collections.Generic;
 
@@ -29,5 +29,7 @@ namespace BookFace.Services.ApplicationUsers
         HomeOwnerModel Owner(string creatorId);
 
         HomeOwnerModel Owner(ApplicationUser user);
+
+        ChatFriendModel ChatFriend(string userId);
     }
 }

@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -22,14 +22,10 @@ namespace BookFace.Data.Models
         [MaxLength(ProfileImagePathMaxLength)]
         public string ProfileImagePath { get; set; }
 
-        public string FriendId { get; set; }
-
-        public Friend Friend { get; set; }
-
         public IEnumerable<Friendship> Friendships { get; set; } = new List<Friendship>();
 
         public IEnumerable<Post> Posts { get; set; } = new List<Post>();
 
-        public ICollection<Post> Likes { get; set; } = new List<Post>();
+        public ICollection<Like> Likes { get; set; } = new List<Like>();
     }
 }

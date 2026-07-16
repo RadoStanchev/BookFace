@@ -5,7 +5,6 @@ using BookFace.Infrastructure.Extensions;
 using BookFace.Services.ApplicationUsers;
 using BookFace.Services.Chat;
 using BookFace.Services.Comment;
-using BookFace.Services.Friend;
 using BookFace.Services.Friendship;
 using BookFace.Services.Message;
 using BookFace.Services.Post;
@@ -66,7 +65,6 @@ namespace BookFace
             services.AddTransient<ICommentService, CommentService>();
             services.AddTransient<IValidator, ClassValidator>();
             services.AddTransient<IPostService, PostService>();
-            services.AddTransient<IFriendService, FriendService>();
             services.AddTransient<IFriendshipService, FriendshipService>();
 
             services.AddControllersWithViews(options =>

@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -9,7 +9,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using static BookFace.Data.DataConstants.ApplicationUser;
-using BookFace.Services.Friend;
 using BookFace.Infrastructure.Extensions;
 using System;
 using BookFace.Services.Friendship;
@@ -23,20 +22,17 @@ namespace BookFace.Areas.Identity.Pages.Account
         private readonly SignInManager<ApplicationUser> signInManager;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IApplicationUserService applicationUserService;
-        private readonly IFriendService friendService;
         private readonly IFriendshipService friendshipService;
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             IApplicationUserService applicationUserService,
-            IFriendService friendService,
             IFriendshipService friendshipService)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.applicationUserService = applicationUserService;
-            this.friendService = friendService;
             this.friendshipService = friendshipService;
             Input = new InputModel();
         }
@@ -116,7 +112,6 @@ namespace BookFace.Areas.Identity.Pages.Account
                     if (result.Succeeded)
                     {
                         await signInManager.SignInAsync(user, isPersistent: false);
-                        friendService.CreateFriend(user.Id);
                         friendshipService.CreateFriendship(user.Id, user.Id, FriendshipStatus.Requested, FriendshipStatus.Accepted);   
                         return LocalRedirect(returnUrl);
                     }

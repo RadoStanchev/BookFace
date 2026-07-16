@@ -6,12 +6,10 @@ namespace BookFace.Data.Models
 {
     public class Chat
     {
-        public string Id { get; set; } = Guid.NewGuid().ToString();
+        public Guid Id { get; set; }
 
         public ICollection<Message> Messages { get; set; } = new List<Message>();
 
-        public string FriendshipId { get; set; }
-
-        public Friendship Friendship { get; set; }
+        public ICollection<ChatUser> Users { get; set; } = new List<ChatUser>();
     }
 }

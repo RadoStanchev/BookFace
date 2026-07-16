@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -9,7 +9,7 @@ namespace BookFace.Data.Models
 {
     public class Post
     {
-        public string Id { get; set; } = Guid.NewGuid().ToString();
+        public Guid Id { get; set; }
 
         [Required]
         [MaxLength(ContentMaxLength)]
@@ -20,12 +20,16 @@ namespace BookFace.Data.Models
 
         public DateTime CreatedOn { get; set; }
 
+        public DateTime? UpdatedOn { get; set; }
+
+        public bool IsDeleted { get; set; } = false;
+
         public string CreatorId { get; set; }
 
         public ApplicationUser Creator { get; set; }
 
         public IEnumerable<Comment> Comments { get; set; } = new List<Comment>();
 
-        public IEnumerable<ApplicationUser> Likes { get; set; } = new List<ApplicationUser>();
+        public IEnumerable<Like> Likes { get; set; } = new List<Like>();
     }
 }

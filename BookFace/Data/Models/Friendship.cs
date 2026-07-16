@@ -1,4 +1,4 @@
-﻿using BookFace.Data.Enums;
+using BookFace.Data.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,26 +9,22 @@ namespace BookFace.Data.Models
 {
     public class Friendship
     {
-        [Required]
-        public string FirstUserId { get; set; }
+        public Guid Id { get; set; }
 
         [Required]
-        public ApplicationUser FirstUser { get; set; }
+        public string RequesterId { get; set; }
+
+        public ApplicationUser Requester { get; set; }
 
         [Required]
-        public string SecondUserId { get; set; }
+        public string AddresseeId { get; set; }
+
+        public ApplicationUser Addressee { get; set; }
 
         [Required]
-        public Friend SecondUser { get; set; }
+        public FriendshipStatus RequesterStatus { get; set; }
 
         [Required]
-        public FriendshipStatus FirstUserStatus { get; set; }
-
-        [Required]
-        public FriendshipStatus SecondUserStatus { get; set; }
-
-        public string ChatId { get; set; }
-
-        public Chat Chat { get; set; }
+        public FriendshipStatus AddresseeStatus { get; set; }
     }
 }

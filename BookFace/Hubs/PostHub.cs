@@ -1,8 +1,8 @@
-﻿using BookFace.Infrastructure.Extensions;
+using BookFace.Infrastructure.Extensions;
 using BookFace.Models.Comment;
 using BookFace.Models.Post;
 using BookFace.Services.Comment;
-using BookFace.Services.Friend;
+using BookFace.Services.ApplicationUsers;
 using BookFace.Services.Friendship;
 using BookFace.Services.Post;
 using BookFace.Services.System;
@@ -17,26 +17,24 @@ namespace BookFace.Hubs
     public class PostHub : Hub
     {
         private readonly IPostService postService;
-
         private readonly ICommentService commentService;
-
-        private readonly IFriendService friendService;
-
+        private readonly IApplicationUserService applicationUserService;
         private readonly IValidator validator;
-
         private readonly IFriendshipService friendshipService;
+
         public PostHub(IPostService postService, 
             IValidator validator, 
             ICommentService commentService, 
-            IFriendService friendService,
+            IApplicationUserService applicationUserService,
             IFriendshipService friendshipService)
         {
             this.postService = postService;
             this.validator = validator;
             this.commentService = commentService;
-            this.friendService = friendService;
+            this.applicationUserService = applicationUserService;
             this.friendshipService = friendshipService;
         }
+
         public Task CreatePost(string content, string image)
         {
             var inputPost = new PostInputModel
@@ -53,9 +51,10 @@ namespace BookFace.Hubs
             }
 
             var postId = postService.CreatePost(Context.User.Id(), content, image);
-            var user = friendService.ChatFriend(Context.User.Id());
+            var user = applicationUserService.ChatFriend(Context.User.Id());
 
-            var myFriendsId = friendshipService.MyFriendsId(Context.User.Id()); 
+            var myFriendsId = friendshipService.MyFriendsId(Context.User.Id()).ToList(); 
+            myFriendsId.Add(Context.User.Id()); // Also send to the user who created it
 
             return Clients.Users(myFriendsId).SendAsync("ShowPost", postService.Post(postId, Context.User.Id()), user);
         }

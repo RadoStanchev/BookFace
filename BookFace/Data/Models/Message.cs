@@ -6,7 +6,7 @@ namespace BookFace.Data.Models
 {
     public class Message
     {
-        public string Id { get; set; } = Guid.NewGuid().ToString();
+        public Guid Id { get; set; }
 
         [Required]
         public string CreatorId { get; set; }
@@ -21,8 +21,10 @@ namespace BookFace.Data.Models
         [Required]
         public DateTime CreatedOn { get; set; }
 
+        public bool IsDeleted { get; set; } = false;
+
         [Required]
-        public string ChatId { get; set; }
+        public Guid ChatId { get; set; }
 
         [Required]
         public Chat Chat { get; set; }

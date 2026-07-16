@@ -1,4 +1,4 @@
-﻿using BookFace.Data;
+using BookFace.Data;
 using BookFace.Models.Message;
 using BookFace.Services.ApplicationUsers;
 using System;
@@ -11,7 +11,6 @@ namespace BookFace.Services.Message
     public class MessageService : IMessageService
     {
         private readonly ApplicationDbContext data;
-
         private readonly IApplicationUserService applicationUserService;
 
         public MessageService(ApplicationDbContext data, IApplicationUserService applicationUserService)
@@ -24,21 +23,25 @@ namespace BookFace.Services.Message
         {
             var message = new Message
             {
+                Id = Guid.NewGuid(),
                 Content = content,
-                ChatId = chatId,
+                ChatId = Guid.Parse(chatId),
                 CreatorId = userId,
-                CreatedOn = DateTime.Now,
+                CreatedOn = DateTime.UtcNow,
             };
 
             data.Messages.Add(message);
             data.SaveChanges();
 
-            return message.Id;
+            return message.Id.ToString();
         }
 
         public MessageModel Message(string messageId)
         {
-            var message = data.Messages.FirstOrDefault(x => x.Id == messageId);
+            var messageGuid = Guid.Parse(messageId);
+            var message = data.Messages.FirstOrDefault(x => x.Id == messageGuid);
+
+            if (message == null) return null;
 
             return new MessageModel
             {
@@ -51,10 +54,12 @@ namespace BookFace.Services.Message
 
         public IEnumerable<MessageModel> Messages(string chatId)
         {
+            var chatGuid = Guid.Parse(chatId);
             return data.Messages
-                .AsEnumerable()
-                .Where(x => x.ChatId == chatId)
+                .AsQueryable()
+                .Where(x => x.ChatId == chatGuid)
                 .OrderBy(x => x.CreatedOn)
+                .AsEnumerable()
                 .Select(x => new MessageModel
                 {
                     Content = x.Content,

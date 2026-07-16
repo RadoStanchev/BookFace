@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations;
 using static BookFace.Data.DataConstants.Comment;
 
@@ -6,7 +6,7 @@ namespace BookFace.Data.Models
 {
     public class Comment
     {
-        public string Id { get; set; } = Guid.NewGuid().ToString();
+        public Guid Id { get; set; }
 
         [Required]
         [MaxLength(ContentMaxLength)]
@@ -15,13 +15,17 @@ namespace BookFace.Data.Models
         [Required]
         public DateTime CreatedOn { get; set; }
 
+        public DateTime? UpdatedOn { get; set; }
+
+        public bool IsDeleted { get; set; } = false;
+
         [Required]
         public string CreatorId { get; set; }
 
         public ApplicationUser Creator { get; set; }
 
         [Required]
-        public string PostId { get; set; }
+        public Guid PostId { get; set; }
 
         [Required]
         public Post Post { get; set; }

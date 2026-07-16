@@ -1,4 +1,4 @@
-﻿using BookFace.Data;
+using BookFace.Data;
 using BookFace.Models.Comment;
 using BookFace.Services.ApplicationUsers;
 using System;
@@ -12,8 +12,8 @@ namespace BookFace.Services.Comment
     public class CommentService : ICommentService
     {
         private readonly ApplicationDbContext data;
-
         private readonly IApplicationUserService applicationUserService;
+
         public CommentService(ApplicationDbContext data, IApplicationUserService applicationUserService)
         {
             this.data = data;
@@ -22,7 +22,8 @@ namespace BookFace.Services.Comment
 
         public HomePostCommentModel Comment(string commentId)
         {
-            var comment = data.Comments.FirstOrDefault(x => x.Id == commentId);
+            var commentGuid = Guid.Parse(commentId);
+            var comment = data.Comments.FirstOrDefault(x => x.Id == commentGuid);
 
             return new HomePostCommentModel
             {
@@ -36,24 +37,26 @@ namespace BookFace.Services.Comment
         {
             var comment = new Comment()
             {
+                Id = Guid.NewGuid(),
                 CreatorId = creatorId,
                 Content = content,
-                PostId = postId,
-                CreatedOn = DateTime.Now,
+                PostId = Guid.Parse(postId),
+                CreatedOn = DateTime.UtcNow,
             };
 
             data.Comments.Add(comment);
             data.SaveChanges();
 
-            return comment.Id;
+            return comment.Id.ToString();
         }
 
         public ICollection<HomePostCommentModel> IndexPostComments(string postId)
         {
+            var postGuid = Guid.Parse(postId);
             var comments = data.Comments
                         .AsQueryable()
-                        .Where(x => x.PostId == postId)
-                         .ToList();
+                        .Where(x => x.PostId == postGuid)
+                        .ToList();
 
             return IndexPostComments(comments);
         }
@@ -62,11 +65,11 @@ namespace BookFace.Services.Comment
         {
             return comments.Select(x => new HomePostCommentModel
             {
-                            Content = x.Content,
-                            Owner = applicationUserService.Owner(x.CreatorId),
-                            DateDiff = x.CreatedOn.ToString("dddd, dd MMMM yyyy HH:mm"),
-                        })
-                        .ToList();
+                Content = x.Content,
+                Owner = applicationUserService.Owner(x.CreatorId),
+                DateDiff = x.CreatedOn.ToString("dddd, dd MMMM yyyy HH:mm"),
+            })
+            .ToList();
         }
     }
 }

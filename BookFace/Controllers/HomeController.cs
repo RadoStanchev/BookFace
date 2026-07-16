@@ -1,4 +1,4 @@
-﻿using BookFace.Models;
+using BookFace.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using BookFace.Infrastructure.Extensions;
 using BookFace.Models.Home;
 using BookFace.Services.Friendship;
-using BookFace.Services.Friend;
+using BookFace.Services.ApplicationUsers;
 using BookFace.Services.Post;
 
 namespace BookFace.Controllers
@@ -22,16 +22,16 @@ namespace BookFace.Controllers
 
         private readonly IPostService postService;
 
-        private readonly IFriendService friendService;
+        private readonly IApplicationUserService applicationUserService;
 
         public HomeController(
             IFriendshipService friendshipService, 
             IPostService postService, 
-            IFriendService friendService)
+            IApplicationUserService applicationUserService)
         {
             this.friendshipService = friendshipService;
             this.postService = postService;
-            this.friendService = friendService;
+            this.applicationUserService = applicationUserService;
         }
 
         public IActionResult Index([FromQuery] HomePostSuggestionQueryModel query)
@@ -39,7 +39,7 @@ namespace BookFace.Controllers
             var model = new HomePostSuggestionQueryModel();
             if (User.Identity.IsAuthenticated)
             {
-                model.User = friendService.ChatFriend(User.Id());
+                model.User = applicationUserService.ChatFriend(User.Id());
                 model.Suggestions = friendshipService.Suggestions(User.Id(), 10);
                 model.Posts = postService.Posts(User.Id(), query.CurrentPage, HomePostSuggestionQueryModel.PostsPerPage);
                 model.TotalPosts = postService.TotalPosts(User.Id());

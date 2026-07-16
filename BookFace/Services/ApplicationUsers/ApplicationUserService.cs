@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using BookFace.Data;
@@ -144,6 +144,20 @@ namespace BookFace.Services.ApplicationUsers
         public string UserName(string userId)
         {
             return data.ApplicationUsers.FirstOrDefault(au => au.Id == userId).UserName;
+        }
+
+        public ChatFriendModel ChatFriend(string userId)
+        {
+            var user = data.ApplicationUsers.FirstOrDefault(x => x.Id == userId);
+            if (user == null) return null;
+
+            return new ChatFriendModel
+            {
+                Id = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                ProfileImagePath = user.ProfileImagePath,
+            };
         }
     }
 }

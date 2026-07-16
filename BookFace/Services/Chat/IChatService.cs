@@ -1,4 +1,4 @@
-﻿using BookFace.Models.Chat;
+using BookFace.Models.Chat;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +9,7 @@ namespace BookFace.Services.Chat
     using Chat = BookFace.Data.Models.Chat;
     public interface IChatService
     {
-        string CreateChat();
+        string CreateChat(string firstId, string secondId);
 
         string ChatId(string firstId, string secondId);
 
